@@ -50,6 +50,7 @@ protected:
 	void resizeEvent(QResizeEvent *evt);
 	void changeEvent(QEvent *evt);
 private slots:
+	void rawConsoleReturnPressed();
 	void uiReadReadinessButtonClicked();
 	void obdMonitorStatus(QList<QString> list);
 	void pidsPerSecondTimerTick();

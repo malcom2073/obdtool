@@ -146,10 +146,10 @@ void QmlWindow::obdTroubleCodes(QList<QString> codes)
 
 void QmlWindow::getTroubleCodes()
 {
-	obdThread->requestTroubleCodes();
+	obdThread->sendReqTroubleCodes();
 }
 
 void QmlWindow::clearTroubleCodes()
 {
-	obdThread->clearTroubleCodes();
+	obdThread->sendClearTroubleCodes();
 }

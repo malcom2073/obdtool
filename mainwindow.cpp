@@ -15,19 +15,19 @@ MainWindow::MainWindow() : QMainWindow()
 	connect(ui.actionConnect,SIGNAL(triggered()),this,SLOT(menu_actionConnectClicked()));
 	connect(ui.readReadinessPushButton,SIGNAL(clicked()),this,SLOT(uiReadReadinessButtonClicked()));
 	obdThread = new ObdThread(this);
-	QObject::connect(obdThread,SIGNAL(pidReceived(QString,QString,int,double)),this,SLOT(obdPidReceived(QString,QString,int,double)));
-	QObject::connect(obdThread,SIGNAL(troubleCodes(QList<QString>)),this,SLOT(obdTroubleCodes(QList<QString>)));
+	QObject::connect(obdThread,SIGNAL(pidReply(QString,QString,int,double)),this,SLOT(obdPidReceived(QString,QString,int,double)));
+	QObject::connect(obdThread,SIGNAL(troubleCodesReply(QList<QString>)),this,SLOT(obdTroubleCodes(QList<QString>)));
 	QObject::connect(obdThread,SIGNAL(consoleMessage(QString)),this,SLOT(obdConsoleMessage(QString)));
 	QObject::connect(obdThread,SIGNAL(connected(QString)),this,SLOT(obdConnected(QString)));
 	QObject::connect(obdThread,SIGNAL(disconnected()),this,SLOT(obdDisconnected()));
-	QObject::connect(obdThread,SIGNAL(singleShotResponse(QByteArray,QByteArray)),this,SLOT(obdSingleShotReply(QByteArray,QByteArray)));
-	QObject::connect(obdThread,SIGNAL(protocolFound(QString)),this,SLOT(obdProtocolFound(QString)));
-	QObject::connect(obdThread,SIGNAL(supportedPids(QList<QString>)),this,SLOT(obdSupportedPids(QList<QString>)));
+	QObject::connect(obdThread,SIGNAL(singleShotReply(QByteArray,QByteArray)),this,SLOT(obdSingleShotReply(QByteArray,QByteArray)));
+	QObject::connect(obdThread,SIGNAL(protocolReply(QString)),this,SLOT(obdProtocolFound(QString)));
+	QObject::connect(obdThread,SIGNAL(supportedPidsReply(QList<QString>)),this,SLOT(obdSupportedPids(QList<QString>)));
 	QObject::connect(obdThread,SIGNAL(liberror(ObdThread::ObdError)),this,SLOT(obdError(ObdThread::ObdError)));
-	QObject::connect(obdThread,SIGNAL(supportedModes(QList<QString>)),this,SLOT(obdSupportedModes(QList<QString>)));
-	QObject::connect(obdThread,SIGNAL(mfgString(QString)),this,SLOT(obdMfgString(QString)));
-	QObject::connect(obdThread,SIGNAL(voltage(double)),this,SLOT(obdVoltage(double)));
-	QObject::connect(obdThread,SIGNAL(monitorTestResults(QList<QString>)),this,SLOT(obdMonitorStatus(QList<QString>)));
+	QObject::connect(obdThread,SIGNAL(supportedModesReply(QList<QString>)),this,SLOT(obdSupportedModes(QList<QString>)));
+	QObject::connect(obdThread,SIGNAL(mfgStringReply(QString)),this,SLOT(obdMfgString(QString)));
+	QObject::connect(obdThread,SIGNAL(voltageReply(double)),this,SLOT(obdVoltage(double)));
+	QObject::connect(obdThread,SIGNAL(monitorTestReply(QList<QString>)),this,SLOT(obdMonitorStatus(QList<QString>)));
 	obdThread->start();
 
 	pidsPerSecondTimer = new QTimer(this);
@@ -245,13 +245,15 @@ MainWindow::MainWindow() : QMainWindow()
 	resultlist.append(egrsystem);
 	//obdMonitorStatus(resultlist);
 
-
+	connect(ui.rawConsoleLineEdit,SIGNAL(returnPressed()),this,SLOT(rawConsoleReturnPressed()));
 }
 void MainWindow::uiReadReadinessButtonClicked()
 {
-	obdThread->reqMonitorStatus();
-
-
+	obdThread->sendReqMonitorStatus();
+}
+void MainWindow::rawConsoleReturnPressed()
+{
+	//obdThread->
 }
 
 void MainWindow::connectButtonClicked()
@@ -495,9 +497,9 @@ void MainWindow::obdConnected(QString version)
 	ui.connectionInfoTableWidget->item(3,1)->setText("Connected");
 	ui.connectionInfoTableWidget->item(4,1)->setText(version);
 	//obdThread->switchBaud();
-	//obdThread->reqVoltage();
-	//obdThread->reqSupportedModes();
-	//obdThread->reqMfgString();
+	obdThread->sendReqVoltage();
+	obdThread->sendReqSupportedModes();
+	obdThread->sendReqMfgString();
 	ui.status_comStatusLabel->setText("Status: Connected");
 	ui.status_comInterfaceLabel->setText("Interface: " + version);
 	//ui.status_comBaudLabel->setText()
