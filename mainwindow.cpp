@@ -3,17 +3,58 @@
 #include <QDeclarativeItem>
 #include "gaugeitem.h"
 
+
 MainWindow::MainWindow() : QMainWindow()
 {
-	//0x67
-	//0xe1
-	//0x65
 
+/*Request: "0601" "1"
+Response: "7E8 10 1C 46 01 81 0E 0A CB 7E8 21 06 54 0E D8 01 87 10 7E8 22 00 9D 00 00 01 2C 01 7E8 23 88 10 00 84 00 00 02 7E8 24 58 00 00 00 00 00 00 "
+Request: "0602" "2"
+Response: "7E8 10 25 46 02 01 0A 0E 68 7E8 21 00 00 FF FF 02 81 0E 7E8 22 03 59 00 DC 0B B8 02 7E8 23 85 B1 F8 AA C5 68 00 7E8 24 00 02 86 10 03 92 00 7E8 25 00 17 70 00 00 00 00 "
+Request: "0605" "5"
+Response: "7E8 10 1C 46 05 81 0E 0A E5 7E8 21 06 54 0E D8 05 87 10 7E8 22 00 6B 00 00 01 2C 05 7E8 23 88 10 00 5D 00 00 02 7E8 24 58 00 00 00 00 00 00 "
+Request: "0606" "6"
+Response: "7E8 10 25 46 06 01 0A 0E 68 7E8 21 00 00 FF FF 06 81 0E 7E8 22 03 46 00 DC 0B B8 06 7E8 23 85 B1 F9 40 C5 68 00 7E8 24 00 06 86 10 03 3A 00 7E8 25 00 17 70 00 00 00 00 "
+Request: "0621" "33"
+Response: "7E8 10 0A 46 21 80 20 00 34 7E8 21 00 00 00 9E 00 00 00 "
+Request: "0622" "34"
+Response: "7E8 10 0A 46 22 80 20 00 19 7E8 21 00 00 00 B8 00 00 00 "
+Request: "0633" "51"
+Response: "7E8 10 0A 46 33 82 05 49 6A 7E8 21 0F 5E FF FF 00 00 00 "
+Request: "0635" "53"
+Response: "7E8 10 13 46 35 80 1C 00 18 7E8 21 00 00 06 C4 35 81 1C 7E8 22 00 1D 00 00 03 06 00 "
+Request: "0636" "54"
+Response: "7E8 10 13 46 36 80 1C 00 1A 7E8 21 00 00 06 C4 36 81 1C 7E8 22 00 1E 00 00 03 06 00 "
+Request: "063A" "58"
+Response: "7E8 10 1C 46 3A 80 FE E0 DE 7E8 21 E0 DE 7F FF 3A 81 FE 7E8 22 00 00 00 00 00 00 3A 7E8 23 82 FE E0 DE 80 00 E0 7E8 24 DE 00 00 00 00 00 00 "
+Request: "063C" "60"
+Response: "7E8 10 1C 46 3C 81 FE 00 00 7E8 21 00 00 00 00 3C 82 FE 7E8 22 00 00 00 00 00 00 3C 7E8 23 83 03 00 00 00 00 00 7E8 24 00 00 00 00 00 00 00 "
+Request: "063D" "61"
+Response: "7E8 10 1C 46 3D 80 A9 00 00 7E8 21 00 00 00 00 3D 81 FE 7E8 22 FB AD F5 4D 7F FF 3D 7E8 23 82 FE 00 00 00 00 00 7E8 24 00 00 00 00 00 00 00 "
+Request: "06A1" "161"
+Response: "7E8 10 2E 46 A1 80 30 00 00 7E8 21 00 00 51 E9 A1 81 30 7E8 22 00 00 00 00 02 DD A1 7E8 23 82 30 00 DA 00 00 51 7E8 24 E9 A1 83 30 00 00 00 7E8 25 00 02 DD A1 84 16 12 7E8 26 CC 00 00 21 2B 00 00 "
+Request: "06A2" "162"
+Response: "7E8 10 25 46 A2 0B 24 00 00 7E8 21 00 00 FF FF A2 0C 24 7E8 22 00 00 00 00 FF FF A2 7E8 23 80 30 00 00 00 00 51 7E8 24 E9 A2 81 30 00 00 00 7E8 25 00 02 DD 00 00 00 00 "
+Request: "06A3" "163"
+Response: "7E8 10 25 46 A3 0B 24 00 00 7E8 21 00 00 FF FF A3 0C 24 7E8 22 00 00 00 00 FF FF A3 7E8 23 80 30 00 00 00 00 51 7E8 24 E9 A3 81 30 00 00 00 7E8 25 00 02 DD 00 00 00 00 "
+Request: "06A4" "164"
+Response: "7E8 10 25 46 A4 0B 24 00 00 7E8 21 00 00 FF FF A4 0C 24 7E8 22 00 00 00 00 FF FF A4 7E8 23 80 30 00 00 00 00 51 7E8 24 E9 A4 81 30 00 00 00 7E8 25 00 02 DD 00 00 00 00 "
+Request: "06A5" "165"
+Response: "7E8 10 25 46 A5 0B 24 00 00 7E8 21 00 00 FF FF A5 0C 24 7E8 22 00 00 00 00 FF FF A5 7E8 23 80 30 00 00 00 00 51 7E8 24 E9 A5 81 30 00 00 00 7E8 25 00 02 DD 00 00 00 00 "
+Request: "06A6" "166"
+Response: "7E8 10 25 46 A6 0B 24 00 00 7E8 21 00 00 FF FF A6 0C 24 7E8 22 00 00 00 00 FF FF A6 7E8 23 80 30 00 00 00 00 51 7E8 24 E9 A6 81 30 00 00 00 7E8 25 00 02 DD 00 00 00 00 "
+Request: "06A7" "167"
+Response: "7E8 10 25 46 A7 0B 24 00 00 7E8 21 00 00 FF FF A7 0C 24 7E8 22 00 00 00 00 FF FF A7 7E8 23 80 30 00 00 00 00 51 7E8 24 E9 A7 81 30 00 00 00 7E8 25 00 02 DD 00 00 00 00 "
+*/
 
 	ui.setupUi(this);
+
+
 	connect(ui.actionSettings,SIGNAL(triggered()),this,SLOT(menu_settingsClicked()));
 	connect(ui.actionConnect,SIGNAL(triggered()),this,SLOT(menu_actionConnectClicked()));
 	connect(ui.readReadinessPushButton,SIGNAL(clicked()),this,SLOT(uiReadReadinessButtonClicked()));
+
+
 	obdThread = new ObdThread(this);
 	QObject::connect(obdThread,SIGNAL(pidReply(QString,QString,int,double)),this,SLOT(obdPidReceived(QString,QString,int,double)));
 	QObject::connect(obdThread,SIGNAL(troubleCodesReply(QList<QString>)),this,SLOT(obdTroubleCodes(QList<QString>)));
@@ -30,9 +71,12 @@ MainWindow::MainWindow() : QMainWindow()
 	QObject::connect(obdThread,SIGNAL(monitorTestReply(QList<QString>)),this,SLOT(obdMonitorStatus(QList<QString>)));
 	obdThread->start();
 
+
 	pidsPerSecondTimer = new QTimer(this);
 	connect(pidsPerSecondTimer,SIGNAL(timeout()),this,SLOT(pidsPerSecondTimerTick()));
 	pidsPerSecondTimer->start(1000);
+
+
 	ui.connectionInfoTableWidget->setRowCount(16);
 	ui.connectionInfoTableWidget->setColumnCount(2);
 	ui.connectionInfoTableWidget->setColumnWidth(0,220);
@@ -65,21 +109,10 @@ MainWindow::MainWindow() : QMainWindow()
 	ui.pidSelectTableWidget->setColumnCount(2);
 	ui.pidSelectTableWidget->setColumnWidth(0,100);
 	ui.pidSelectTableWidget->setColumnWidth(1,200);
-	//ui.pidSelectTableWidget->horizontalHeader()->hide();
 	ui.pidSelectTableWidget->setHorizontalHeaderLabels(QStringList() << "PID" << "Description");
 	ui.pidSelectTableWidget->verticalHeader()->hide();
 
 	//connect(ui.pidSelectTableWidget,SIGNAL(itemClicked(QTableWidgetItem*)))
-
-	QList<QString> pidlist;
-	pidlist.append("010C");
-	pidlist.append("010D");
-	pidlist.append("010F");
-	pidlist.append("0104");
-	pidlist.append("0105");
-	//obdSupportedPids(pidlist);
-
-
 
 	QSettings settings("IFS","obdqmltool");
 	settings.beginGroup("settings");
@@ -94,13 +127,13 @@ MainWindow::MainWindow() : QMainWindow()
 
 	ui.connectionInfoTableWidget->item(0,1)->setText(port);
 	ui.connectionInfoTableWidget->item(1,1)->setText(QString::number(baud));
-	//ui.connectionInfoTableWidget->setItem(7,0,new QTableWidgetItem(""));
 
 	gaugeView = new QDeclarativeView(ui.gaugesTab);
 	qmlRegisterType<GaugeItem>("GaugeImage",0,1,"GaugeImage");
 	gaugeView->setGeometry(0,0,this->width()-5,this->height()-(ui.statusbar->height()+30));
 	gaugeView->setSource(QUrl("gaugeview.qml"));
 	gaugeView->show();
+
 	ui.statusbar->addWidget(ui.status_comPortLabel);
 	ui.statusbar->addWidget(ui.status_comBaudLabel);
 	ui.statusbar->addWidget(ui.status_comStatusLabel);
@@ -128,13 +161,13 @@ MainWindow::MainWindow() : QMainWindow()
 	obdThread->addRequest(0x01,0x04,2,0);
 	obdThread->addRequest(0x01,0x31,100,0);
 
-	addReadPidRow("010C");
-	addReadPidRow("010D");
-	addReadPidRow("0105");
-	addReadPidRow("0110");
-	addReadPidRow("0111");
-	addReadPidRow("0104");
-	addReadPidRow("0131");
+	//addReadPidRow("010C");
+	//addReadPidRow("010D");
+	//addReadPidRow("0105");
+	//addReadPidRow("0110");
+	//addReadPidRow("0111");
+	//addReadPidRow("0104");
+	//addReadPidRow("0131");
 
 	graph = new EGraph(ui.graphsTab);
 	graph->setGeometry(0,0,800,600);
@@ -155,8 +188,8 @@ MainWindow::MainWindow() : QMainWindow()
 	ui.nonconTableWidget->setHorizontalHeaderLabels(QStringList() << "Non continuous monitoring tests" << "Supported" << "Completed");
 	ui.nonconTableWidget->verticalHeader()->hide();
 	ui.nonconTableWidget->setColumnWidth(0,200);
-	ui.nonconTableWidget->setColumnWidth(1,50);
-	ui.nonconTableWidget->setColumnWidth(2,50);
+	ui.nonconTableWidget->setColumnWidth(1,75);
+	ui.nonconTableWidget->setColumnWidth(2,75);
 
 	ui.nonconTableWidget->setRowCount(8);
 	ui.nonconTableWidget->setItem(0,0,new QTableWidgetItem("Catalyst"));
@@ -197,55 +230,107 @@ MainWindow::MainWindow() : QMainWindow()
 	ui.monitorStatusTableWidget->verticalHeader()->hide();
 	ui.monitorStatusTableWidget->setColumnWidth(0,200);
 	ui.monitorStatusTableWidget->setColumnWidth(1,75);
-	QList<QString> tmplist;
-	tmplist.append("1:1");
-	tmplist.append("1:0");
-	tmplist.append("1:1");
-	tmplist.append("0:0");
-	tmplist.append("1:0");
-	tmplist.append("0:1");
-	tmplist.append("1:1");
-	tmplist.append("0:1");
-	tmplist.append("0:1");
-	tmplist.append("1:1");
-	tmplist.append("0:1");
-	//tmplist.append("1:0");
-	//obdMonitorStatus(tmplist);
-
-
-	unsigned char one = 0x00;//m_obd->byteArrayToByte(vect2[0].toAscii(),vect2[1].toAscii());
-	unsigned char two = 0x67;//m_obd->byteArrayToByte(vect2[2].toAscii(),vect2[3].toAscii());
-	unsigned char three = 0xe1; //m_obd->byteArrayToByte(vect2[4].toAscii(),vect2[5].toAscii());
-	unsigned char four = 0x65; //m_obd->byteArrayToByte(vect2[6].toAscii(),vect2[7].toAscii());
-	QList<QString> resultlist;
-	QString misfire = QString(((two >> 0) & 1) ? "1" : "0") + ":" + (((two >> 4) & 1) ? "1" : "0");
-	QString fuelsystem = QString(((two >> 1) & 1) ? "1" : "0") + ":" + (((two >> 5) & 1) ? "1" : "0");
-	QString component = QString(((two >> 2) & 1) ? "1" : "0") + ":" + (((two >> 6) & 1) ? "1" : "0");
-	//	QString reserved = QString(((two >> 3) & 1) ? "1" : "0") + ":" + (((two >> 7) & 1) ? "1" : "0");
-	QString catalyst = QString(((three >> 0) & 1) ? "1" : "0") + ":" + (((four >> 0) & 1) ? "1" : "0");
-	QString heatedcat =QString (((three >> 1) & 1) ? "1" : "0") + ":" + (((four >> 1) & 1) ? "1" : "0");
-	QString evapsys = QString(((three >> 2) & 1) ? "1" : "0") + ":" + (((four >> 2) & 1) ? "1" : "0");
-	QString secondair = QString(((three >> 3) & 1) ? "1" : "0") + ":" + (((four >> 3) & 1) ? "1" : "0");
-	QString acrefrig = QString(((three >> 4) & 1) ? "1" : "0") + ":" + (((four >> 4) & 1) ? "1" : "0");
-	QString oxygensensor = QString(((three >> 5) & 1) ? "1" : "0") + ":" + (((four >> 5) & 1) ? "1" : "0");
-	QString oxygenheater = QString(((three >> 6) & 1) ? "1" : "0") + ":" + (((four >> 6) & 1) ? "1" : "0");
-	QString egrsystem = QString(((three >> 7) & 1) ? "1" : "0") + ":" + (((four >> 7) & 1) ? "1" : "0");
-
-	resultlist.append(misfire);
-	resultlist.append(fuelsystem);
-	resultlist.append(component);
-	//resultlist.append(reserved);
-	resultlist.append(catalyst);
-	resultlist.append(heatedcat);
-	resultlist.append(evapsys);
-	resultlist.append(secondair);
-	resultlist.append(acrefrig);
-	resultlist.append(oxygensensor);
-	resultlist.append(oxygenheater);
-	resultlist.append(egrsystem);
-	//obdMonitorStatus(resultlist);
 
 	connect(ui.rawConsoleLineEdit,SIGNAL(returnPressed()),this,SLOT(rawConsoleReturnPressed()));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	QList<QString> responselist;
+	responselist.append("7E8 10 1C 46 01 81 0E 0A CB 7E8 21 06 54 0E D8 01 87 10 7E8 22 00 9D 00 00 01 2C 01 7E8 23 88 10 00 84 00 00 02 7E8 24 58 00 00 00 00 00 00 ");
+	responselist.append("7E8 10 25 46 02 01 0A 0E 68 7E8 21 00 00 FF FF 02 81 0E 7E8 22 03 59 00 DC 0B B8 02 7E8 23 85 B1 F8 AA C5 68 00 7E8 24 00 02 86 10 03 92 00 7E8 25 00 17 70 00 00 00 00 ");
+	responselist.append("7E8 10 1C 46 05 81 0E 0A E5 7E8 21 06 54 0E D8 05 87 10 7E8 22 00 6B 00 00 01 2C 05 7E8 23 88 10 00 5D 00 00 02 7E8 24 58 00 00 00 00 00 00 ");
+	responselist.append("7E8 10 2E 46 A1 80 30 00 00 7E8 21 00 00 51 E9 A1 81 30 7E8 22 00 00 00 00 02 DD A1 7E8 23 82 30 00 DA 00 00 51 7E8 24 E9 A1 83 30 00 00 00 7E8 25 00 02 DD A1 84 16 12 7E8 26 CC 00 00 21 2B 00 00 ");
+	responselist.append("7E8 10 1C 46 05 81 0E 0A E5 7E8 21 06 54 0E D8 05 87 10 7E8 22 00 6B 00 00 01 2C 05 7E8 23 88 10 00 5D 00 00 02 7E8 24 58 00 00 00 00 00 00 ");
+	responselist.append("7E8 10 25 46 06 01 0A 0E 68 7E8 21 00 00 FF FF 06 81 0E 7E8 22 03 46 00 DC 0B B8 06 7E8 23 85 B1 F9 40 C5 68 00 7E8 24 00 06 86 10 03 3A 00 7E8 25 00 17 70 00 00 00 00 ");
+
+	for (int k=0;k<responselist.size();k++)
+		{
+		QString req = "0601\r";
+		//QString response = ;
+		//response = response.mid(10);
+		QStringList responsesplit = responselist[k].mid(10).split("7E8");
+		QString total = "";
+		for (int i=0;i<responsesplit.size();i++)
+		{
+			//qDebug() << responsesplit[i];
+			if (responsesplit[i].length() > 0)
+			{
+				QString line = responsesplit[i];
+				line = line.replace(" ","");
+				line = line.mid(2);
+				//qDebug() << "Line:" << line;
+				total += line;
+			}
+		}
+		//qDebug() << "Final" << total;
+		for (int i=0;i<total.length();i++)
+		{
+			if (total.length() > i+18)
+			{
+				QString name = total.mid(i,4);
+				i+= 4;
+				QString type = total.mid(i,2);
+				unsigned char obdmidchar = obdLib::byteArrayToByte(name[0].toAscii(),name[1].toAscii());
+				unsigned char obdtidchar = obdLib::byteArrayToByte(name[2].toAscii(),name[1].toAscii());
+				unsigned char typechar = obdLib::byteArrayToByte(type[0].toAscii(),type[1].toAscii());
+
+				i+=2;
+				QString val = total.mid(i,4);
+				unsigned int valb=0;
+				valb += obdLib::byteArrayToByte(val[0].toAscii(),val[1].toAscii()) << 8;
+				valb += obdLib::byteArrayToByte(val[2].toAscii(),val[3].toAscii());
+				//qDebug() << QString::number(typechar,16);
+
+				ObdInfo::ModeSixScalers scaler = obdThread->getInfo()->getScalerFromByte(typechar);
+				ObdInfo::ModeSixInfo info = obdThread->getInfo()->getInfoFromByte(obdmidchar);
+				ObdInfo::ModeSixInfo test = obdThread->getInfo()->getTestFromByte(obdtidchar);
+				if (test.id == 0)
+				{
+					//MFG Test
+					qDebug() << info.description << "MFG Test";
+				}
+				else
+				{
+					qDebug() << info.description << test.description;
+				}
+				double newval = ((valb * scaler.multiplier) + scaler.offset);
+				qDebug() << QString::number(obdtidchar,16);
+				qDebug() << valb << scaler.multiplier << newval << scaler.units;
+
+
+				//63,658
+				//50,536
+				//value -4222
+				//min -30000
+				//max 0
+				//minimum -FFFF
+				//max FFFF
+				//1.68453333333
+				//qDebug() << QString::number(valb[0],16) << QString::number(valb[1],16);
+				//qDebug() << "Valb" << valb.toFloat();
+
+				i+=4;
+				QString something = total.mid(i,4);
+				i+=4;
+				QString some2 = total.mid(i,4);
+				i += 3;
+				//qDebug() << name << type << val << something << some2;
+			}
+		}
+	}
+
+
 }
 void MainWindow::uiReadReadinessButtonClicked()
 {
@@ -497,6 +582,7 @@ void MainWindow::obdConnected(QString version)
 	ui.connectionInfoTableWidget->item(3,1)->setText("Connected");
 	ui.connectionInfoTableWidget->item(4,1)->setText(version);
 	//obdThread->switchBaud();
+	obdThread->sendReqOnBoardMonitors();
 	obdThread->sendReqVoltage();
 	obdThread->sendReqSupportedModes();
 	obdThread->sendReqMfgString();
