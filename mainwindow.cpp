@@ -53,6 +53,12 @@ Response: "7E8 10 25 46 A7 0B 24 00 00 7E8 21 00 00 FF FF A7 0C 24 7E8 22 00 00 
 	connect(ui.actionSettings,SIGNAL(triggered()),this,SLOT(menu_settingsClicked()));
 	connect(ui.actionConnect,SIGNAL(triggered()),this,SLOT(menu_actionConnectClicked()));
 	connect(ui.readReadinessPushButton,SIGNAL(clicked()),this,SLOT(uiReadReadinessButtonClicked()));
+	connect(ui.rawConsoleLineEdit,SIGNAL(returnPressed()),this,SLOT(rawConsoleReturnPressed()));
+	connect(ui.connectPushButton,SIGNAL(clicked()),this,SLOT(connectButtonClicked()));
+	connect(ui.pidSelectNonePushButton,SIGNAL(clicked()),this,SLOT(uiPidSelectClearClicked()));
+	connect(ui.pidSelectSavePushButton,SIGNAL(clicked()),this,SLOT(uiPidSelectSaveClicked()));
+	connect(ui.connectPushButton,SIGNAL(clicked()),this,SLOT(menu_actionConnectClicked()));
+	connect(ui.disconnectPushButton,SIGNAL(clicked()),this,SLOT(menu_actionDisconnectClicked()));
 
 
 	obdThread = new ObdThread(this);
@@ -69,6 +75,7 @@ Response: "7E8 10 25 46 A7 0B 24 00 00 7E8 21 00 00 FF FF A7 0C 24 7E8 22 00 00 
 	QObject::connect(obdThread,SIGNAL(mfgStringReply(QString)),this,SLOT(obdMfgString(QString)));
 	QObject::connect(obdThread,SIGNAL(voltageReply(double)),this,SLOT(obdVoltage(double)));
 	QObject::connect(obdThread,SIGNAL(monitorTestReply(QList<QString>)),this,SLOT(obdMonitorStatus(QList<QString>)));
+	QObject::connect(obdThread,SIGNAL(onBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>)),this,SLOT(obdOnBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>)));
 	obdThread->start();
 
 
@@ -106,10 +113,11 @@ Response: "7E8 10 25 46 A7 0B 24 00 00 7E8 21 00 00 FF FF A7 0C 24 7E8 22 00 00 
 	}
 
 	ui.pidSelectTableWidget->setRowCount(0);
-	ui.pidSelectTableWidget->setColumnCount(2);
+	ui.pidSelectTableWidget->setColumnCount(3);
 	ui.pidSelectTableWidget->setColumnWidth(0,100);
 	ui.pidSelectTableWidget->setColumnWidth(1,200);
-	ui.pidSelectTableWidget->setHorizontalHeaderLabels(QStringList() << "PID" << "Description");
+	ui.pidSelectTableWidget->setColumnWidth(2,50);
+	ui.pidSelectTableWidget->setHorizontalHeaderLabels(QStringList() << "PID" << "Description" << "Priority");
 	ui.pidSelectTableWidget->verticalHeader()->hide();
 
 	//connect(ui.pidSelectTableWidget,SIGNAL(itemClicked(QTableWidgetItem*)))
@@ -153,13 +161,13 @@ Response: "7E8 10 25 46 A7 0B 24 00 00 7E8 21 00 00 FF FF A7 0C 24 7E8 22 00 00 
 	ui.readPidsTableWidget->setHorizontalHeaderLabels(QStringList() << "PID" << "Description" << "Value" << "Units" << "Minimum" << "Maximum" << "Average");
 	ui.readPidsTableWidget->verticalHeader()->hide();
 
-	obdThread->addRequest(0x01,0x0C,1,0);
-	obdThread->addRequest(0x01,0x0D,2,0);
-	obdThread->addRequest(0x01,0x05,5,0);
-	obdThread->addRequest(0x01,0x10,1,0);
-	obdThread->addRequest(0x01,0x11,1,0);
-	obdThread->addRequest(0x01,0x04,2,0);
-	obdThread->addRequest(0x01,0x31,100,0);
+	//obdThread->addRequest(0x01,0x0C,1,0);
+	//obdThread->addRequest(0x01,0x0D,2,0);
+	//obdThread->addRequest(0x01,0x05,5,0);
+	//obdThread->addRequest(0x01,0x10,1,0);
+	//obdThread->addRequest(0x01,0x11,1,0);
+	//obdThread->addRequest(0x01,0x04,2,0);
+	//obdThread->addRequest(0x01,0x31,100,0);
 
 	//addReadPidRow("010C");
 	//addReadPidRow("010D");
@@ -180,7 +188,6 @@ Response: "7E8 10 25 46 A7 0B 24 00 00 7E8 21 00 00 FF FF A7 0C 24 7E8 22 00 00 
 	m_graphPidMap["010C"] = 1;
 	graph->show();
 
-	connect(ui.connectPushButton,SIGNAL(clicked()),this,SLOT(connectButtonClicked()));
 
 
 
@@ -231,7 +238,6 @@ Response: "7E8 10 25 46 A7 0B 24 00 00 7E8 21 00 00 FF FF A7 0C 24 7E8 22 00 00 
 	ui.monitorStatusTableWidget->setColumnWidth(0,200);
 	ui.monitorStatusTableWidget->setColumnWidth(1,75);
 
-	connect(ui.rawConsoleLineEdit,SIGNAL(returnPressed()),this,SLOT(rawConsoleReturnPressed()));
 
 
 
@@ -246,89 +252,6 @@ Response: "7E8 10 25 46 A7 0B 24 00 00 7E8 21 00 00 FF FF A7 0C 24 7E8 22 00 00 
 
 
 
-	QList<QString> responselist;
-	responselist.append("7E8 10 1C 46 01 81 0E 0A CB 7E8 21 06 54 0E D8 01 87 10 7E8 22 00 9D 00 00 01 2C 01 7E8 23 88 10 00 84 00 00 02 7E8 24 58 00 00 00 00 00 00 ");
-	responselist.append("7E8 10 25 46 02 01 0A 0E 68 7E8 21 00 00 FF FF 02 81 0E 7E8 22 03 59 00 DC 0B B8 02 7E8 23 85 B1 F8 AA C5 68 00 7E8 24 00 02 86 10 03 92 00 7E8 25 00 17 70 00 00 00 00 ");
-	responselist.append("7E8 10 1C 46 05 81 0E 0A E5 7E8 21 06 54 0E D8 05 87 10 7E8 22 00 6B 00 00 01 2C 05 7E8 23 88 10 00 5D 00 00 02 7E8 24 58 00 00 00 00 00 00 ");
-	responselist.append("7E8 10 2E 46 A1 80 30 00 00 7E8 21 00 00 51 E9 A1 81 30 7E8 22 00 00 00 00 02 DD A1 7E8 23 82 30 00 DA 00 00 51 7E8 24 E9 A1 83 30 00 00 00 7E8 25 00 02 DD A1 84 16 12 7E8 26 CC 00 00 21 2B 00 00 ");
-	responselist.append("7E8 10 1C 46 05 81 0E 0A E5 7E8 21 06 54 0E D8 05 87 10 7E8 22 00 6B 00 00 01 2C 05 7E8 23 88 10 00 5D 00 00 02 7E8 24 58 00 00 00 00 00 00 ");
-	responselist.append("7E8 10 25 46 06 01 0A 0E 68 7E8 21 00 00 FF FF 06 81 0E 7E8 22 03 46 00 DC 0B B8 06 7E8 23 85 B1 F9 40 C5 68 00 7E8 24 00 06 86 10 03 3A 00 7E8 25 00 17 70 00 00 00 00 ");
-
-	for (int k=0;k<responselist.size();k++)
-		{
-		QString req = "0601\r";
-		//QString response = ;
-		//response = response.mid(10);
-		QStringList responsesplit = responselist[k].mid(10).split("7E8");
-		QString total = "";
-		for (int i=0;i<responsesplit.size();i++)
-		{
-			//qDebug() << responsesplit[i];
-			if (responsesplit[i].length() > 0)
-			{
-				QString line = responsesplit[i];
-				line = line.replace(" ","");
-				line = line.mid(2);
-				//qDebug() << "Line:" << line;
-				total += line;
-			}
-		}
-		//qDebug() << "Final" << total;
-		for (int i=0;i<total.length();i++)
-		{
-			if (total.length() > i+18)
-			{
-				QString name = total.mid(i,4);
-				i+= 4;
-				QString type = total.mid(i,2);
-				unsigned char obdmidchar = obdLib::byteArrayToByte(name[0].toAscii(),name[1].toAscii());
-				unsigned char obdtidchar = obdLib::byteArrayToByte(name[2].toAscii(),name[1].toAscii());
-				unsigned char typechar = obdLib::byteArrayToByte(type[0].toAscii(),type[1].toAscii());
-
-				i+=2;
-				QString val = total.mid(i,4);
-				unsigned int valb=0;
-				valb += obdLib::byteArrayToByte(val[0].toAscii(),val[1].toAscii()) << 8;
-				valb += obdLib::byteArrayToByte(val[2].toAscii(),val[3].toAscii());
-				//qDebug() << QString::number(typechar,16);
-
-				ObdInfo::ModeSixScalers scaler = obdThread->getInfo()->getScalerFromByte(typechar);
-				ObdInfo::ModeSixInfo info = obdThread->getInfo()->getInfoFromByte(obdmidchar);
-				ObdInfo::ModeSixInfo test = obdThread->getInfo()->getTestFromByte(obdtidchar);
-				if (test.id == 0)
-				{
-					//MFG Test
-					qDebug() << info.description << "MFG Test";
-				}
-				else
-				{
-					qDebug() << info.description << test.description;
-				}
-				double newval = ((valb * scaler.multiplier) + scaler.offset);
-				qDebug() << QString::number(obdtidchar,16);
-				qDebug() << valb << scaler.multiplier << newval << scaler.units;
-
-
-				//63,658
-				//50,536
-				//value -4222
-				//min -30000
-				//max 0
-				//minimum -FFFF
-				//max FFFF
-				//1.68453333333
-				//qDebug() << QString::number(valb[0],16) << QString::number(valb[1],16);
-				//qDebug() << "Valb" << valb.toFloat();
-
-				i+=4;
-				QString something = total.mid(i,4);
-				i+=4;
-				QString some2 = total.mid(i,4);
-				i += 3;
-				//qDebug() << name << type << val << something << some2;
-			}
-		}
-	}
 
 
 }
@@ -340,10 +263,14 @@ void MainWindow::rawConsoleReturnPressed()
 {
 	//obdThread->
 }
+void MainWindow::menu_actionDisconnectClicked()
+{
+	obdThread->disconnect();
+}
 
 void MainWindow::connectButtonClicked()
 {
-    obdThread->connect();
+	obdThread->connect();
 }
 
 void MainWindow::changeEvent(QEvent *evt)
@@ -359,8 +286,41 @@ void MainWindow::pidsPerSecondTimerTick()
 	ui.status_pidUpdateRateLabel->setText("Pid Rate: " + QString::number(m_pidcount));
 	m_pidcount=0;
 }
+void MainWindow::obdOnBoardMonitoringReply(QList<unsigned char> midlist,QList<unsigned char> tidlist,QList<QString> vallist,QList<QString> minlist,QList<QString> maxlist)
+{
+	for (int i=0;i<midlist.size();i++)
+	{
+		ObdInfo::ModeSixInfo midinfo = obdThread->getInfo()->getInfoFromByte(midlist[i]);
+		ObdInfo::ModeSixInfo tidinfo = obdThread->getInfo()->getTestFromByte(tidlist[i]);
+		qDebug() << QString::number(midlist[i],16) << QString::number(tidlist[i],16) << vallist[i] << minlist[i] << maxlist[i];
+		if (tidinfo.id == 0)
+		{
+			qDebug() << midinfo.description << "MFG Test";
+		}
+		else
+		{
+			qDebug() << midinfo.description << tidinfo.description;
+		}
+	}
+}
+void MainWindow::clearReadPidsTable()
+{
+	m_readPidTableMap.clear();
+	ui.readPidsTableWidget->clearContents();
+	ui.readPidsTableWidget->setRowCount(0);
+	QMap<QString, ObdThread::RequestClass>::const_iterator i = m_pidToReqClassMap.constBegin();
+	while (i != m_pidToReqClassMap.constEnd())
+	{
+		obdThread->removeRequest(i.value());
+	    //cout << i.key() << ": " << i.value() << endl;
 
-void MainWindow::addReadPidRow(QString pid)
+	    ++i;
+	}
+
+	//m_pidToReqClassMap.clear();
+}
+
+void MainWindow::addReadPidRow(QString pid,int priority)
 {
 	ObdInfo::Pid *p = obdThread->getInfo()->getPidFromString(pid);
 	if (!p)
@@ -380,6 +340,16 @@ void MainWindow::addReadPidRow(QString pid)
 	ui.readPidsTableWidget->setItem(index,4,new QTableWidgetItem(QString::number(p->min)));
 	ui.readPidsTableWidget->setItem(index,5,new QTableWidgetItem(QString::number(p->max)));
 	ui.readPidsTableWidget->setItem(index,6,new QTableWidgetItem("avg"));
+	ObdThread::RequestClass req;
+	req.mode = p->mode;
+	req.pid = p->pid;
+	req.repeat = true;
+	req.priority = priority;
+	req.wait = 0;
+	req.type = ObdThread::MODE_PID;
+	obdThread->addRequest(req);
+	m_pidToReqClassMap[pid] = req;
+
 }
 void MainWindow::resizeEvent(QResizeEvent *evt)
 {
@@ -453,7 +423,7 @@ void MainWindow::uiPidSelectTableClicked(int row, int column)
 			if (!m_readPidTableMap.contains(ui.pidSelectTableWidget->item(i,0)->text()))
 			{
 				//Pid is not currently on our list! Let's add it.
-				addReadPidRow(ui.pidSelectTableWidget->item(i,0)->text());
+				//addReadPidRow(ui.pidSelectTableWidget->item(i,0)->text(),ui.pidSelectTableWidget->item(i,2)->text().toInt());
 			}
 		}
 		else
@@ -536,11 +506,26 @@ void MainWindow::obdSupportedPids(QList<QString> pidlist)
 	ui.pidSelectTableWidget->setRowCount(pidlist.size());
 	for (int i=0;i<pidlist.size();i++)
 	{
-		ui.pidSelectTableWidget->setItem(i,0,new QTableWidgetItem(pidlist[i]));
-		ui.pidSelectTableWidget->item(i,0)->setCheckState(Qt::Checked);
-		if (obdThread->getInfo()->getPidFromString(pidlist[i]))
+		ObdInfo::Pid *p = obdThread->getInfo()->getPidFromString(pidlist[i]);
+		if (p)
 		{
-			ui.pidSelectTableWidget->setItem(i,1,new QTableWidgetItem(obdThread->getInfo()->getPidFromString(pidlist[i])->description));
+			ui.pidSelectTableWidget->setItem(i,0,new QTableWidgetItem(pidlist[i]));
+			if (!p->bitencoded)
+			{
+			ui.pidSelectTableWidget->item(i,0)->setCheckState(Qt::Checked);
+			}
+
+			if (obdThread->getInfo()->getPidFromString(pidlist[i]))
+			{
+				ui.pidSelectTableWidget->setItem(i,1,new QTableWidgetItem(p->description));
+				ui.pidSelectTableWidget->setItem(i,2,new QTableWidgetItem("1"));
+			}
+		}
+		else
+		{
+			ui.pidSelectTableWidget->setItem(i,0,new QTableWidgetItem(pidlist[i]));
+			ui.pidSelectTableWidget->setItem(i,1,new QTableWidgetItem("INVALID"));
+			ui.pidSelectTableWidget->setItem(i,2,new QTableWidgetItem("1"));
 		}
 	}
 }
@@ -568,6 +553,29 @@ void MainWindow::settings_saveComPort(QString port,int baud)
 	ui.connectionInfoTableWidget->item(1,1)->setText(QString::number(baud));
 	settingsWidget->deleteLater();
 }
+void MainWindow::uiPidSelectClearClicked()
+{
+	for (int i=0;i<ui.pidSelectTableWidget->rowCount();i++)
+	{
+		if (ui.pidSelectTableWidget->item(i,0)->checkState() == Qt::Checked)
+		{
+		ui.pidSelectTableWidget->item(i,0)->setCheckState(Qt::Unchecked);
+		}
+	}
+}
+
+void MainWindow::uiPidSelectSaveClicked()
+{
+	clearReadPidsTable();
+	for (int i=0;i<ui.pidSelectTableWidget->rowCount();i++)
+	{
+		if (ui.pidSelectTableWidget->item(i,0)->checkState() == Qt::Checked)
+		{
+			addReadPidRow(ui.pidSelectTableWidget->item(i,0)->text(),ui.pidSelectTableWidget->item(i,2)->text().toInt());
+		}
+	}
+}
+
 void MainWindow::obdPidReceived(QString pid,QString val,int set, double time)
 {
 	qDebug() << pid << val;
@@ -585,6 +593,7 @@ void MainWindow::obdConnected(QString version)
 	obdThread->sendReqOnBoardMonitors();
 	obdThread->sendReqVoltage();
 	obdThread->sendReqSupportedModes();
+	obdThread->sendReqSupportedPids();
 	obdThread->sendReqMfgString();
 	ui.status_comStatusLabel->setText("Status: Connected");
 	ui.status_comInterfaceLabel->setText("Interface: " + version);

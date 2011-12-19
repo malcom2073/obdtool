@@ -41,16 +41,21 @@ private:
 	*/
 	Ui::MainWindow ui;
 	QMap<QString,QTableWidgetItem*> m_readPidTableMap;
-	void addReadPidRow(QString pid);
+	void addReadPidRow(QString pid,int priority);
 	QList<GaugeWidget*> m_gaugeWidgetList;
 	QDeclarativeView *gaugeView;
 	QTimer *pidsPerSecondTimer;
 	int m_pidcount;
+	void clearReadPidsTable();
+	QMap<QString,ObdThread::RequestClass> m_pidToReqClassMap;
 protected:
 	void resizeEvent(QResizeEvent *evt);
 	void changeEvent(QEvent *evt);
 private slots:
+	void menu_actionDisconnectClicked();
+	void uiPidSelectSaveClicked();
 	void rawConsoleReturnPressed();
+	void uiPidSelectClearClicked();
 	void uiReadReadinessButtonClicked();
 	void obdMonitorStatus(QList<QString> list);
 	void pidsPerSecondTimerTick();
@@ -71,6 +76,7 @@ private slots:
 	void obdProtocolFound(QString protocol);
 	void obdDisconnected();
 	void obdSingleShotReply(QByteArray req,QByteArray reply);
+	void obdOnBoardMonitoringReply(QList<unsigned char> midlist,QList<unsigned char> tidlist,QList<QString> vallist,QList<QString> minlist,QList<QString> maxlist);
 
 };
 #endif //MAINWINDOW_H
