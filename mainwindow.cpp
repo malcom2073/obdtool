@@ -148,7 +148,8 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 	ui.status_comBaudLabel->setText("Baud Rate: " + QString::number(baud));
 	obdThread->setPort(port);
 	obdThread->setBaud(baud);
-
+	m_port = port;
+	m_baud = baud;
 	ui.connectionInfoTableWidget->item(0,1)->setText(port);
 	ui.connectionInfoTableWidget->item(1,1)->setText(QString::number(baud));
 
@@ -515,6 +516,7 @@ void MainWindow::menu_settingsClicked()
 	connect(settingsWidget,SIGNAL(saveSettings(QString,int)),this,SLOT(settings_saveComPort(QString,int)));
 	//QMdiSubWindow *win = ui.mdiArea->addSubWindow(settingsWidget);
 	//win->setGeometry(100,100,311,156);
+	settingsWidget->setSettings(m_port,m_baud);
 	settingsWidget->show();
 }
 void MainWindow::obdSupportedPids(QList<QString> pidlist)
@@ -561,7 +563,8 @@ void MainWindow::settings_saveComPort(QString port,int baud)
 	settings.setValue("comport",port);
 	settings.setValue("baudrate",baud);
 	settings.endGroup();
-
+	m_port = port;
+	m_baud = baud;
 	obdThread->setPort(port);
 	obdThread->setBaud(baud);
 	ui.status_comPortLabel->setText("Com port: " + port);

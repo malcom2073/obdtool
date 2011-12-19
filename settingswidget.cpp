@@ -18,6 +18,11 @@ void SettingsWidget::saveButtonClicked()
 	saveSettings(port,baud);
 	this->hide();
 }
+void SettingsWidget::setSettings(QString comport,int baud)
+{
+	ui.comPortLineEdit->setText(comport);
+	ui.baudRateLineEdit->setText(QString::number(baud));
+}
 
 void SettingsWidget::cancelButtonClicked()
 {

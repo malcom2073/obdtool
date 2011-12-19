@@ -9,6 +9,7 @@ class SettingsWidget : public QWidget
 
 public:
 	SettingsWidget(QWidget *parent = 0);
+	void setSettings(QString comport,int baud);
 	~SettingsWidget();
 signals:
 	void saveSettings(QString comport,int baud);

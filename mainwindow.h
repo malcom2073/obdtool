@@ -49,6 +49,8 @@ private:
 	QDeclarativeView *gaugeView;
 	QTimer *pidsPerSecondTimer;
 	int m_pidcount;
+	QString m_port;
+	int m_baud;
 	void clearReadPidsTable();
 	QMap<QString,ObdThread::RequestClass> m_pidToReqClassMap;
 protected:
