@@ -2,7 +2,7 @@
 #include <QSettings>
 #include <QDeclarativeItem>
 #include "gaugeitem.h"
-
+#include <QDeclarativeContext>
 
 MainWindow::MainWindow() : QMainWindow()
 {
@@ -46,7 +46,23 @@ Response: "7E8 10 25 46 A6 0B 24 00 00 7E8 21 00 00 FF FF A6 0C 24 7E8 22 00 00 
 Request: "06A7" "167"
 Response: "7E8 10 25 46 A7 0B 24 00 00 7E8 21 00 00 FF FF A7 0C 24 7E8 22 00 00 00 00 FF FF A7 7E8 23 80 30 00 00 00 00 51 7E8 24 E9 A7 81 30 00 00 00 7E8 25 00 02 DD 00 00 00 00 "
 */
-
+/*QString qml = "import Qt 4.7\nimport GaugeImage 0.1\nRectangle {x:0\ny:0\nwidth: 1280\nheight: 800\ncolor: \"black\"\n";
+qml += "GaugeImage {\nx:0\ny:0\nwidth:200\nheight:200\nminimum:-40\nmaximum:200\nnumLabels:3\nstartAngle:45\nendAngle:270\n";
+qml += "Behavior on m_value {  PropertyAnimation { properties: \"m_value\"; duration: (propertyMap[\"0105_DURATION\"] ? propertyMap[\"0105_DURATION\"] : 500) } }\n";
+qml += "m_value: (propertyMap[\"0105\"] ? propertyMap[\"0105\"] : 0)\n}\n";
+qml += "GaugeImage {\nx:425\ny:0\nwidth:250\nheight:250\nminimum:0\nmaximum:655\nnumLabels:3\nstartAngle:90\nendAngle:270\n";
+qml += "Behavior on m_value {  PropertyAnimation { properties: \"m_value\"; duration: (propertyMap[\"0110_DURATION\"] ? propertyMap[\"0110_DURATION\"] : 500) } }\n";
+qml += "m_value: (propertyMap[\"0110\"] ? propertyMap[\"0110\"] : 0) * 10\n}\n";
+qml += "GaugeImage {\nx:0\ny:150\nwidth:550\nheight:550\nminimum: 0\nmaximum: 7000\nnumLabels: 7\nstartAngle: 45\nendAngle: 315\n";
+qml += "Behavior on m_value {  PropertyAnimation { properties: \"m_value\"; duration: (propertyMap[\"010C_DURATION\"] ? propertyMap[\"010C_DURATION\"] : 500) } }\n";
+qml += "m_value: (propertyMap[\"010C\"] ? propertyMap[\"010C\"] : 0)\n}\n";
+qml += "GaugeImage {\nx: 550\ny: 150\nwidth:550\nheight: 550\nminimum:0\nmaximum: 140\nnumLabels: 7\nstartAngle: 45\nendAngle: 315\n";
+qml += "Behavior on m_value { PropertyAnimation { properties: \"m_value\"; duration: (propertyMap[\"010D_DURATION\"] ? propertyMap[\"010D_DURATION\"] : 500) } }\n";
+qml += "m_value: (propertyMap[\"010D\"] ? propertyMap[\"010D\"] : 0)\n}\n";
+qml += "GaugeImage {\nx: 975\ny: 0\nwidth:250\nheight: 250\nminimum:0\nmaximum: 140\nnumLabels: 7\nstartAngle: 45\nendAngle: 315\n";
+qml += "Behavior on m_value { PropertyAnimation { properties: \"m_value\"; duration: (propertyMap[\"010F_DURATION\"] ? propertyMap[\"010F_DURATION\"] : 500) } }\n";
+qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
+*/
 	ui.setupUi(this);
 
 
@@ -138,9 +154,12 @@ Response: "7E8 10 25 46 A7 0B 24 00 00 7E8 21 00 00 FF FF A7 0C 24 7E8 22 00 00 
 
 	gaugeView = new QDeclarativeView(ui.gaugesTab);
 	qmlRegisterType<GaugeItem>("GaugeImage",0,1,"GaugeImage");
+	gaugeView->rootContext()->setContextProperty("propertyMap",&propertyMap);
 	gaugeView->setGeometry(0,0,this->width()-5,this->height()-(ui.statusbar->height()+30));
-	gaugeView->setSource(QUrl("gaugeview.qml"));
+	gaugeView->setSource(QUrl("qrc:/gaugeview.qml"));
 	gaugeView->show();
+
+	//gaugeView->engine()->setProperty("propertyMap",propertyMap);
 
 	ui.statusbar->addWidget(ui.status_comPortLabel);
 	ui.statusbar->addWidget(ui.status_comBaudLabel);
@@ -239,19 +258,17 @@ Response: "7E8 10 25 46 A7 0B 24 00 00 7E8 21 00 00 FF FF A7 0C 24 7E8 22 00 00 
 	ui.monitorStatusTableWidget->setColumnWidth(1,75);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+	//ui.readinessTab->setVisible(false);
+	//ui.readinessTab->hide();
+	//ui.vehiclePidTab->hide();
+	//ui.troubleCodesTab->hide();
+	//ui.onBoardMonitoringTab->hide();
+	//ui.tabWidget->hide();
+	ui.tabWidget->removeTab(2);
+	ui.tabWidget->removeTab(3);
+	ui.tabWidget->removeTab(3);
+	ui.tabWidget->removeTab(3);
+	ui.tabWidget->removeTab(3);
 
 
 }
@@ -578,7 +595,17 @@ void MainWindow::uiPidSelectSaveClicked()
 
 void MainWindow::obdPidReceived(QString pid,QString val,int set, double time)
 {
-	qDebug() << pid << val;
+	//qDebug() << pid << val;
+	propertyMap.setProperty(pid.toAscii(),val);
+	//0105_DURATION
+	if (m_pidTimeMap.contains(pid))
+	{
+		double newtime = QDateTime::currentMSecsSinceEpoch() - m_pidTimeMap[pid];
+		//qDebug() << pid << val << set << QString::number(QDateTime::currentMSecsSinceEpoch(),'f') << newtime << QDateTime::currentMSecsSinceEpoch();
+		propertyMap.setProperty(QString(pid + "_DURATION").toAscii(),newtime);
+	}
+	m_pidTimeMap[pid] = QDateTime::currentMSecsSinceEpoch();
+
 	if (m_readPidTableMap.contains(pid))
 	{
 		m_readPidTableMap[pid]->setText(val);
@@ -590,7 +617,7 @@ void MainWindow::obdConnected(QString version)
 	ui.connectionInfoTableWidget->item(3,1)->setText("Connected");
 	ui.connectionInfoTableWidget->item(4,1)->setText(version);
 	//obdThread->switchBaud();
-	obdThread->sendReqOnBoardMonitors();
+	//obdThread->sendReqOnBoardMonitors();
 	obdThread->sendReqVoltage();
 	obdThread->sendReqSupportedModes();
 	obdThread->sendReqSupportedPids();
@@ -612,6 +639,7 @@ void MainWindow::obdDisconnected()
 
 void MainWindow::obdConsoleMessage(QString message)
 {
+	ui.debugTextBrowser->append(message);
 }
 
 void MainWindow::obdTroubleCodes(QList<QString> codes)

@@ -38,8 +38,11 @@ SOURCES += main.cpp mainwindow.cpp qmlwindow.cpp gaugeitem.cpp \
 OTHER_FILES += \
     main.qml \
     Osk/Osk.qml \
-    Setup/Setup.qml
+    Setup/Setup.qml \
+    gaugeview.qml
 
 FORMS += \
     mainwindow.ui \
     settingswidget.ui
+RESOURCES += resources.qrc \
+    resources.qrc

@@ -115,7 +115,6 @@ void QmlWindow::obdPidReceived(QString pid,QString val,int set, double time)
 {
 	if (m_pidTimeMap.contains(pid))
 	{
-
 		double newtime = QDateTime::currentMSecsSinceEpoch() - m_pidTimeMap[pid];
 		//qDebug() << pid << val << set << QString::number(QDateTime::currentMSecsSinceEpoch(),'f') << newtime << QDateTime::currentMSecsSinceEpoch();
 		propertyMap.setProperty(QString(pid + "_DURATION").toAscii(),newtime);

@@ -24,9 +24,9 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>8</number>
     </property>
-    <widget class="QWidget" name="tab">
+    <widget class="QWidget" name="summaryTab">
      <attribute name="title">
       <string>Connection Summary</string>
      </attribute>
@@ -71,7 +71,7 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="tab_2">
+    <widget class="QWidget" name="supportedPidsTab">
      <attribute name="title">
       <string>Supported Pids</string>
      </attribute>
@@ -164,7 +164,7 @@ The more PIDs you select, the slower they will update.</string>
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="tab_3">
+    <widget class="QWidget" name="vehiclePidTab">
      <attribute name="title">
       <string>Read Vehicle Pids</string>
      </attribute>
@@ -228,7 +228,7 @@ The more PIDs you select, the slower they will update.</string>
       <string>Graphs</string>
      </attribute>
     </widget>
-    <widget class="QWidget" name="tab_4">
+    <widget class="QWidget" name="readinessTab">
      <attribute name="title">
       <string>Readiness Status</string>
      </attribute>
@@ -293,7 +293,7 @@ The more PIDs you select, the slower they will update.</string>
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="tab_7">
+    <widget class="QWidget" name="onBoardMonitoringTab">
      <attribute name="title">
       <string>On Board Monitoring</string>
      </attribute>
@@ -321,7 +321,7 @@ The more PIDs you select, the slower they will update.</string>
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_5">
+    <widget class="QWidget" name="troubleCodesTab">
      <attribute name="title">
       <string>Trouble Codes</string>
      </attribute>
@@ -383,7 +383,7 @@ The more PIDs you select, the slower they will update.</string>
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="tab_6">
+    <widget class="QWidget" name="consoleTab">
      <attribute name="title">
       <string>Console</string>
      </attribute>

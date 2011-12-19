@@ -8,6 +8,7 @@
 #include <QMainWindow>
 #include <ObdThread.h>
 #include <QDeclarativeView>
+#include <QDeclarativePropertyMap>
 #include <QTimer>
 #include "gaugewidget.h"
 #include "egraph.h"
@@ -33,9 +34,10 @@ private:
 	QMap<QString,int> m_graphPidMap;
 	SettingsWidget *settingsWidget;
 	ObdThread *obdThread;
+	QMap<QString,double> m_pidTimeMap;
 	/*QDeclarativeContext *context;
 	ObdThread *obdThread;
-	QDeclarativePropertyMap propertyMap;
+
 	QStringList m_troubleCodeList;
 	QMap<QString,double> m_pidTimeMap;
 	*/
@@ -43,6 +45,7 @@ private:
 	QMap<QString,QTableWidgetItem*> m_readPidTableMap;
 	void addReadPidRow(QString pid,int priority);
 	QList<GaugeWidget*> m_gaugeWidgetList;
+	QDeclarativePropertyMap propertyMap;
 	QDeclarativeView *gaugeView;
 	QTimer *pidsPerSecondTimer;
 	int m_pidcount;
