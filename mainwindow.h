@@ -57,6 +57,7 @@ protected:
 	void resizeEvent(QResizeEvent *evt);
 	void changeEvent(QEvent *evt);
 private slots:
+	void menu_actionExit();
 	void menu_actionDisconnectClicked();
 	void uiPidSelectSaveClicked();
 	void rawConsoleReturnPressed();

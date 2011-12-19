@@ -75,7 +75,7 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 	connect(ui.pidSelectSavePushButton,SIGNAL(clicked()),this,SLOT(uiPidSelectSaveClicked()));
 	connect(ui.connectPushButton,SIGNAL(clicked()),this,SLOT(menu_actionConnectClicked()));
 	connect(ui.disconnectPushButton,SIGNAL(clicked()),this,SLOT(menu_actionDisconnectClicked()));
-
+	connect(ui.action_Exit,SIGNAL(triggered()),this,SLOT(menu_actionExit()));
 
 	obdThread = new ObdThread(this);
 	QObject::connect(obdThread,SIGNAL(pidReply(QString,QString,int,double)),this,SLOT(obdPidReceived(QString,QString,int,double)));
@@ -273,6 +273,12 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 
 
 }
+void MainWindow::menu_actionExit()
+{
+	obdThread->disconnect();
+	this->close();
+}
+
 void MainWindow::uiReadReadinessButtonClicked()
 {
 	obdThread->sendReqMonitorStatus();
