@@ -76,6 +76,7 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 	connect(ui.connectPushButton,SIGNAL(clicked()),this,SLOT(menu_actionConnectClicked()));
 	connect(ui.disconnectPushButton,SIGNAL(clicked()),this,SLOT(menu_actionDisconnectClicked()));
 	connect(ui.action_Exit,SIGNAL(triggered()),this,SLOT(menu_actionExit()));
+	connect(ui.monitorPushButton,SIGNAL(clicked()),this,SLOT(uiMonitorButtonClicked()));
 
 	obdThread = new ObdThread(this);
 	QObject::connect(obdThread,SIGNAL(pidReply(QString,QString,int,double)),this,SLOT(obdPidReceived(QString,QString,int,double)));
@@ -91,7 +92,7 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 	QObject::connect(obdThread,SIGNAL(mfgStringReply(QString)),this,SLOT(obdMfgString(QString)));
 	QObject::connect(obdThread,SIGNAL(voltageReply(double)),this,SLOT(obdVoltage(double)));
 	QObject::connect(obdThread,SIGNAL(monitorTestReply(QList<QString>)),this,SLOT(obdMonitorStatus(QList<QString>)));
-	QObject::connect(obdThread,SIGNAL(onBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>)),this,SLOT(obdOnBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>)));
+	QObject::connect(obdThread,SIGNAL(onBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>,QList<QString>)),this,SLOT(obdOnBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>,QList<QString>)));
 	obdThread->start();
 
 
@@ -265,14 +266,19 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 	//ui.troubleCodesTab->hide();
 	//ui.onBoardMonitoringTab->hide();
 	//ui.tabWidget->hide();
-	ui.tabWidget->removeTab(2);
-	ui.tabWidget->removeTab(3);
-	ui.tabWidget->removeTab(3);
-	ui.tabWidget->removeTab(3);
-	ui.tabWidget->removeTab(3);
+	//ui.tabWidget->removeTab(2);
+	//ui.tabWidget->removeTab(3);
+	//ui.tabWidget->removeTab(3);
+	//ui.tabWidget->removeTab(3);
+	//ui.tabWidget->removeTab(3);
 
 
 }
+void MainWindow::uiMonitorButtonClicked()
+{
+	obdThread->sendReqOnBoardMonitors();
+}
+
 void MainWindow::menu_actionExit()
 {
 	obdThread->disconnect();
@@ -310,21 +316,43 @@ void MainWindow::pidsPerSecondTimerTick()
 	ui.status_pidUpdateRateLabel->setText("Pid Rate: " + QString::number(m_pidcount));
 	m_pidcount=0;
 }
-void MainWindow::obdOnBoardMonitoringReply(QList<unsigned char> midlist,QList<unsigned char> tidlist,QList<QString> vallist,QList<QString> minlist,QList<QString> maxlist)
+void MainWindow::obdOnBoardMonitoringReply(QList<unsigned char> midlist,QList<unsigned char> tidlist,QList<QString> vallist,QList<QString> minlist,QList<QString> maxlist,QList<QString> passlist)
 {
+	//qDebug() << "MainWindow::obdOnBoardMonitoringReply";
+	ui.mode06TableWidget->setRowCount(midlist.size());
+	ui.mode06TableWidget->setColumnCount(6);
+	ui.mode06TableWidget->setColumnWidth(0,200);
+	ui.mode06TableWidget->setColumnWidth(1,200);
+	ui.mode06TableWidget->setColumnWidth(2,100);
+	ui.mode06TableWidget->setColumnWidth(3,100);
+	ui.mode06TableWidget->setColumnWidth(4,100);
+	ui.mode06TableWidget->setColumnWidth(5,100);
+	ui.mode06TableWidget->verticalHeader()->hide();
+	ui.mode06TableWidget->setHorizontalHeaderLabels(QStringList() << "OBDMID" << "TID" << "Value" << "Min" << "Max" << "Passed");
 	for (int i=0;i<midlist.size();i++)
 	{
+		ui.mode06TableWidget->setItem(i,0,new QTableWidgetItem(""));
+		ui.mode06TableWidget->setItem(i,1,new QTableWidgetItem(""));
+		ui.mode06TableWidget->setItem(i,2,new QTableWidgetItem(vallist[i]));
+		ui.mode06TableWidget->setItem(i,3,new QTableWidgetItem(minlist[i]));
+		ui.mode06TableWidget->setItem(i,4,new QTableWidgetItem(maxlist[i]));
+		ui.mode06TableWidget->setItem(i,5,new QTableWidgetItem(""));
 		ObdInfo::ModeSixInfo midinfo = obdThread->getInfo()->getInfoFromByte(midlist[i]);
 		ObdInfo::ModeSixInfo tidinfo = obdThread->getInfo()->getTestFromByte(tidlist[i]);
 		qDebug() << QString::number(midlist[i],16) << QString::number(tidlist[i],16) << vallist[i] << minlist[i] << maxlist[i];
 		if (tidinfo.id == 0)
 		{
-			qDebug() << midinfo.description << "MFG Test";
+			//qDebug() << midinfo.description << "MFG Test";
+			ui.mode06TableWidget->item(i,0)->setText(QString::number(midlist[i],16) + ":" + midinfo.description);
+			ui.mode06TableWidget->item(i,1)->setText(QString::number(tidlist[i],16) + ":" + "Manufacturer Test");
 		}
 		else
 		{
-			qDebug() << midinfo.description << tidinfo.description;
+			//qDebug() << midinfo.description << tidinfo.description;
+			ui.mode06TableWidget->item(i,0)->setText(QString::number(midlist[i],16) + ":" + midinfo.description);
+			ui.mode06TableWidget->item(i,1)->setText(QString::number(tidlist[i],16) + ":" + tidinfo.description);
 		}
+		ui.mode06TableWidget->item(i,5)->setText(passlist[i]);
 	}
 }
 void MainWindow::clearReadPidsTable()

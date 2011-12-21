@@ -4,9 +4,9 @@
 #include "mainwindow.h"
 
 int main(int argc, char **argv)
-
 {
 	QApplication a(argc,argv);
+
 	if (argc >= 2)
 	{
 		if (QString(argv[1]) == QString("qml"))

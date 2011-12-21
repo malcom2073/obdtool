@@ -59,6 +59,7 @@ protected:
 private slots:
 	void menu_actionExit();
 	void menu_actionDisconnectClicked();
+	void uiMonitorButtonClicked();
 	void uiPidSelectSaveClicked();
 	void rawConsoleReturnPressed();
 	void uiPidSelectClearClicked();
@@ -82,7 +83,7 @@ private slots:
 	void obdProtocolFound(QString protocol);
 	void obdDisconnected();
 	void obdSingleShotReply(QByteArray req,QByteArray reply);
-	void obdOnBoardMonitoringReply(QList<unsigned char> midlist,QList<unsigned char> tidlist,QList<QString> vallist,QList<QString> minlist,QList<QString> maxlist);
+	void obdOnBoardMonitoringReply(QList<unsigned char> midlist,QList<unsigned char> tidlist,QList<QString> vallist,QList<QString> minlist,QList<QString> maxlist,QList<QString> passlist);
 
 };
 #endif //MAINWINDOW_H
