@@ -6,66 +6,9 @@
 
 MainWindow::MainWindow() : QMainWindow()
 {
-
-/*Request: "0601" "1"
-Response: "7E8 10 1C 46 01 81 0E 0A CB 7E8 21 06 54 0E D8 01 87 10 7E8 22 00 9D 00 00 01 2C 01 7E8 23 88 10 00 84 00 00 02 7E8 24 58 00 00 00 00 00 00 "
-Request: "0602" "2"
-Response: "7E8 10 25 46 02 01 0A 0E 68 7E8 21 00 00 FF FF 02 81 0E 7E8 22 03 59 00 DC 0B B8 02 7E8 23 85 B1 F8 AA C5 68 00 7E8 24 00 02 86 10 03 92 00 7E8 25 00 17 70 00 00 00 00 "
-Request: "0605" "5"
-Response: "7E8 10 1C 46 05 81 0E 0A E5 7E8 21 06 54 0E D8 05 87 10 7E8 22 00 6B 00 00 01 2C 05 7E8 23 88 10 00 5D 00 00 02 7E8 24 58 00 00 00 00 00 00 "
-Request: "0606" "6"
-Response: "7E8 10 25 46 06 01 0A 0E 68 7E8 21 00 00 FF FF 06 81 0E 7E8 22 03 46 00 DC 0B B8 06 7E8 23 85 B1 F9 40 C5 68 00 7E8 24 00 06 86 10 03 3A 00 7E8 25 00 17 70 00 00 00 00 "
-Request: "0621" "33"
-Response: "7E8 10 0A 46 21 80 20 00 34 7E8 21 00 00 00 9E 00 00 00 "
-Request: "0622" "34"
-Response: "7E8 10 0A 46 22 80 20 00 19 7E8 21 00 00 00 B8 00 00 00 "
-Request: "0633" "51"
-Response: "7E8 10 0A 46 33 82 05 49 6A 7E8 21 0F 5E FF FF 00 00 00 "
-Request: "0635" "53"
-Response: "7E8 10 13 46 35 80 1C 00 18 7E8 21 00 00 06 C4 35 81 1C 7E8 22 00 1D 00 00 03 06 00 "
-Request: "0636" "54"
-Response: "7E8 10 13 46 36 80 1C 00 1A 7E8 21 00 00 06 C4 36 81 1C 7E8 22 00 1E 00 00 03 06 00 "
-Request: "063A" "58"
-Response: "7E8 10 1C 46 3A 80 FE E0 DE 7E8 21 E0 DE 7F FF 3A 81 FE 7E8 22 00 00 00 00 00 00 3A 7E8 23 82 FE E0 DE 80 00 E0 7E8 24 DE 00 00 00 00 00 00 "
-Request: "063C" "60"
-Response: "7E8 10 1C 46 3C 81 FE 00 00 7E8 21 00 00 00 00 3C 82 FE 7E8 22 00 00 00 00 00 00 3C 7E8 23 83 03 00 00 00 00 00 7E8 24 00 00 00 00 00 00 00 "
-Request: "063D" "61"
-Response: "7E8 10 1C 46 3D 80 A9 00 00 7E8 21 00 00 00 00 3D 81 FE 7E8 22 FB AD F5 4D 7F FF 3D 7E8 23 82 FE 00 00 00 00 00 7E8 24 00 00 00 00 00 00 00 "
-Request: "06A1" "161"
-Response: "7E8 10 2E 46 A1 80 30 00 00 7E8 21 00 00 51 E9 A1 81 30 7E8 22 00 00 00 00 02 DD A1 7E8 23 82 30 00 DA 00 00 51 7E8 24 E9 A1 83 30 00 00 00 7E8 25 00 02 DD A1 84 16 12 7E8 26 CC 00 00 21 2B 00 00 "
-Request: "06A2" "162"
-Response: "7E8 10 25 46 A2 0B 24 00 00 7E8 21 00 00 FF FF A2 0C 24 7E8 22 00 00 00 00 FF FF A2 7E8 23 80 30 00 00 00 00 51 7E8 24 E9 A2 81 30 00 00 00 7E8 25 00 02 DD 00 00 00 00 "
-Request: "06A3" "163"
-Response: "7E8 10 25 46 A3 0B 24 00 00 7E8 21 00 00 FF FF A3 0C 24 7E8 22 00 00 00 00 FF FF A3 7E8 23 80 30 00 00 00 00 51 7E8 24 E9 A3 81 30 00 00 00 7E8 25 00 02 DD 00 00 00 00 "
-Request: "06A4" "164"
-Response: "7E8 10 25 46 A4 0B 24 00 00 7E8 21 00 00 FF FF A4 0C 24 7E8 22 00 00 00 00 FF FF A4 7E8 23 80 30 00 00 00 00 51 7E8 24 E9 A4 81 30 00 00 00 7E8 25 00 02 DD 00 00 00 00 "
-Request: "06A5" "165"
-Response: "7E8 10 25 46 A5 0B 24 00 00 7E8 21 00 00 FF FF A5 0C 24 7E8 22 00 00 00 00 FF FF A5 7E8 23 80 30 00 00 00 00 51 7E8 24 E9 A5 81 30 00 00 00 7E8 25 00 02 DD 00 00 00 00 "
-Request: "06A6" "166"
-Response: "7E8 10 25 46 A6 0B 24 00 00 7E8 21 00 00 FF FF A6 0C 24 7E8 22 00 00 00 00 FF FF A6 7E8 23 80 30 00 00 00 00 51 7E8 24 E9 A6 81 30 00 00 00 7E8 25 00 02 DD 00 00 00 00 "
-Request: "06A7" "167"
-Response: "7E8 10 25 46 A7 0B 24 00 00 7E8 21 00 00 FF FF A7 0C 24 7E8 22 00 00 00 00 FF FF A7 7E8 23 80 30 00 00 00 00 51 7E8 24 E9 A7 81 30 00 00 00 7E8 25 00 02 DD 00 00 00 00 "
-*/
-/*QString qml = "import Qt 4.7\nimport GaugeImage 0.1\nRectangle {x:0\ny:0\nwidth: 1280\nheight: 800\ncolor: \"black\"\n";
-qml += "GaugeImage {\nx:0\ny:0\nwidth:200\nheight:200\nminimum:-40\nmaximum:200\nnumLabels:3\nstartAngle:45\nendAngle:270\n";
-qml += "Behavior on m_value {  PropertyAnimation { properties: \"m_value\"; duration: (propertyMap[\"0105_DURATION\"] ? propertyMap[\"0105_DURATION\"] : 500) } }\n";
-qml += "m_value: (propertyMap[\"0105\"] ? propertyMap[\"0105\"] : 0)\n}\n";
-qml += "GaugeImage {\nx:425\ny:0\nwidth:250\nheight:250\nminimum:0\nmaximum:655\nnumLabels:3\nstartAngle:90\nendAngle:270\n";
-qml += "Behavior on m_value {  PropertyAnimation { properties: \"m_value\"; duration: (propertyMap[\"0110_DURATION\"] ? propertyMap[\"0110_DURATION\"] : 500) } }\n";
-qml += "m_value: (propertyMap[\"0110\"] ? propertyMap[\"0110\"] : 0) * 10\n}\n";
-qml += "GaugeImage {\nx:0\ny:150\nwidth:550\nheight:550\nminimum: 0\nmaximum: 7000\nnumLabels: 7\nstartAngle: 45\nendAngle: 315\n";
-qml += "Behavior on m_value {  PropertyAnimation { properties: \"m_value\"; duration: (propertyMap[\"010C_DURATION\"] ? propertyMap[\"010C_DURATION\"] : 500) } }\n";
-qml += "m_value: (propertyMap[\"010C\"] ? propertyMap[\"010C\"] : 0)\n}\n";
-qml += "GaugeImage {\nx: 550\ny: 150\nwidth:550\nheight: 550\nminimum:0\nmaximum: 140\nnumLabels: 7\nstartAngle: 45\nendAngle: 315\n";
-qml += "Behavior on m_value { PropertyAnimation { properties: \"m_value\"; duration: (propertyMap[\"010D_DURATION\"] ? propertyMap[\"010D_DURATION\"] : 500) } }\n";
-qml += "m_value: (propertyMap[\"010D\"] ? propertyMap[\"010D\"] : 0)\n}\n";
-qml += "GaugeImage {\nx: 975\ny: 0\nwidth:250\nheight: 250\nminimum:0\nmaximum: 140\nnumLabels: 7\nstartAngle: 45\nendAngle: 315\n";
-qml += "Behavior on m_value { PropertyAnimation { properties: \"m_value\"; duration: (propertyMap[\"010F_DURATION\"] ? propertyMap[\"010F_DURATION\"] : 500) } }\n";
-qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
-*/
 	ui.setupUi(this);
 
-
+	//Setup all the UI signals, connecting them to slots.
 	connect(ui.actionSettings,SIGNAL(triggered()),this,SLOT(menu_settingsClicked()));
 	connect(ui.actionConnect,SIGNAL(triggered()),this,SLOT(menu_actionConnectClicked()));
 	connect(ui.readReadinessPushButton,SIGNAL(clicked()),this,SLOT(uiReadReadinessButtonClicked()));
@@ -77,7 +20,11 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 	connect(ui.disconnectPushButton,SIGNAL(clicked()),this,SLOT(menu_actionDisconnectClicked()));
 	connect(ui.action_Exit,SIGNAL(triggered()),this,SLOT(menu_actionExit()));
 	connect(ui.monitorPushButton,SIGNAL(clicked()),this,SLOT(uiMonitorButtonClicked()));
+	connect(ui.troubleReadPushButton,SIGNAL(clicked()),this,SLOT(uiTroubleReadClicked()));
+	connect(ui.troubleClearPushButton,SIGNAL(clicked()),this,SLOT(uiTroubleClearClicked()));
 
+
+	//OBDThread setup and signal connections.
 	obdThread = new ObdThread(this);
 	QObject::connect(obdThread,SIGNAL(pidReply(QString,QString,int,double)),this,SLOT(obdPidReceived(QString,QString,int,double)));
 	QObject::connect(obdThread,SIGNAL(troubleCodesReply(QList<QString>)),this,SLOT(obdTroubleCodes(QList<QString>)));
@@ -96,11 +43,13 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 	obdThread->start();
 
 
+	//Timer to count how quickly we are reading pids.
 	pidsPerSecondTimer = new QTimer(this);
 	connect(pidsPerSecondTimer,SIGNAL(timeout()),this,SLOT(pidsPerSecondTimerTick()));
 	pidsPerSecondTimer->start(1000);
 
 
+	//Connection summary table
 	ui.connectionInfoTableWidget->setRowCount(16);
 	ui.connectionInfoTableWidget->setColumnCount(2);
 	ui.connectionInfoTableWidget->setColumnWidth(0,220);
@@ -124,11 +73,14 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 	ui.connectionInfoTableWidget->setItem(14,0,new QTableWidgetItem("Service $08 - In Use Performance Tracking"));
 	ui.connectionInfoTableWidget->setItem(15,0,new QTableWidgetItem("Service $09 - Vehicle Information"));
 
+	//Create a bunch of new items in the table, so we can just setText later, rather than having to allocate new items
+	//This table never changes size so this is acceptable.
 	for (int i=0;i<16;i++)
 	{
 		ui.connectionInfoTableWidget->setItem(i,1,new QTableWidgetItem());
 	}
 
+	//Checkbox selection of pids to request
 	ui.pidSelectTableWidget->setRowCount(0);
 	ui.pidSelectTableWidget->setColumnCount(3);
 	ui.pidSelectTableWidget->setColumnWidth(0,100);
@@ -139,6 +91,7 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 
 	//connect(ui.pidSelectTableWidget,SIGNAL(itemClicked(QTableWidgetItem*)))
 
+	//Load com port and baud rate, set them in OBDThread and the connection summary table
 	QSettings settings("IFS","obdqmltool");
 	settings.beginGroup("settings");
 	QString port = settings.value("comport","").toString();
@@ -154,6 +107,8 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 	ui.connectionInfoTableWidget->item(0,1)->setText(port);
 	ui.connectionInfoTableWidget->item(1,1)->setText(QString::number(baud));
 
+
+	//QML Based gaugeview. Load qml from resource, or from a file.
 	gaugeView = new QDeclarativeView(ui.gaugesTab);
 	qmlRegisterType<GaugeItem>("GaugeImage",0,1,"GaugeImage");
 	gaugeView->rootContext()->setContextProperty("propertyMap",&propertyMap);
@@ -163,6 +118,8 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 
 	//gaugeView->engine()->setProperty("propertyMap",propertyMap);
 
+
+	//Add the list of lables for status output to the status bar.
 	ui.statusbar->addWidget(ui.status_comPortLabel);
 	ui.statusbar->addWidget(ui.status_comBaudLabel);
 	ui.statusbar->addWidget(ui.status_comStatusLabel);
@@ -182,21 +139,6 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 	ui.readPidsTableWidget->setHorizontalHeaderLabels(QStringList() << "PID" << "Description" << "Value" << "Units" << "Minimum" << "Maximum" << "Average");
 	ui.readPidsTableWidget->verticalHeader()->hide();
 
-	//obdThread->addRequest(0x01,0x0C,1,0);
-	//obdThread->addRequest(0x01,0x0D,2,0);
-	//obdThread->addRequest(0x01,0x05,5,0);
-	//obdThread->addRequest(0x01,0x10,1,0);
-	//obdThread->addRequest(0x01,0x11,1,0);
-	//obdThread->addRequest(0x01,0x04,2,0);
-	//obdThread->addRequest(0x01,0x31,100,0);
-
-	//addReadPidRow("010C");
-	//addReadPidRow("010D");
-	//addReadPidRow("0105");
-	//addReadPidRow("0110");
-	//addReadPidRow("0111");
-	//addReadPidRow("0104");
-	//addReadPidRow("0131");
 
 	graph = new EGraph(ui.graphsTab);
 	graph->setGeometry(0,0,800,600);
@@ -229,6 +171,14 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 	ui.nonconTableWidget->setItem(6,0,new QTableWidgetItem("Oxygen sensor heater"));
 	ui.nonconTableWidget->setItem(7,0,new QTableWidgetItem("EGR System"));
 
+
+	ui.troubleStoredTableWidget->setColumnCount(3);
+	ui.troubleStoredTableWidget->setColumnWidth(0,100);
+	ui.troubleStoredTableWidget->setColumnWidth(1,100);
+	ui.troubleStoredTableWidget->setColumnWidth(2,500);
+	ui.troubleStoredTableWidget->verticalHeader()->hide();
+	ui.troubleStoredTableWidget->setHorizontalHeaderLabels(QStringList() << "ECU#" << "Code" << "Description");
+
 	for (int i=0;i<8;i++)
 	{
 		ui.nonconTableWidget->setItem(i,1,new QTableWidgetItem());
@@ -259,7 +209,7 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 	ui.monitorStatusTableWidget->setColumnWidth(0,200);
 	ui.monitorStatusTableWidget->setColumnWidth(1,75);
 
-
+	m_permConnect = false;
 	//ui.readinessTab->setVisible(false);
 	//ui.readinessTab->hide();
 	//ui.vehiclePidTab->hide();
@@ -274,6 +224,16 @@ qml += "m_value: (propertyMap[\"010F\"] ? propertyMap[\"010F\"] : 0)\n}\n}";
 
 
 }
+void MainWindow::uiTroubleClearClicked()
+{
+	obdThread->sendClearTroubleCodes();
+}
+
+void MainWindow::uiTroubleReadClicked()
+{
+	obdThread->sendReqTroubleCodes();
+}
+
 void MainWindow::uiMonitorButtonClicked()
 {
 	obdThread->sendReqOnBoardMonitors();
@@ -320,13 +280,14 @@ void MainWindow::obdOnBoardMonitoringReply(QList<unsigned char> midlist,QList<un
 {
 	//qDebug() << "MainWindow::obdOnBoardMonitoringReply";
 	ui.mode06TableWidget->setRowCount(midlist.size());
-	ui.mode06TableWidget->setColumnCount(6);
+	ui.mode06TableWidget->setColumnCount(7);
 	ui.mode06TableWidget->setColumnWidth(0,200);
 	ui.mode06TableWidget->setColumnWidth(1,200);
 	ui.mode06TableWidget->setColumnWidth(2,100);
 	ui.mode06TableWidget->setColumnWidth(3,100);
 	ui.mode06TableWidget->setColumnWidth(4,100);
 	ui.mode06TableWidget->setColumnWidth(5,100);
+	ui.mode06TableWidget->setColumnWidth(6,100);
 	ui.mode06TableWidget->verticalHeader()->hide();
 	ui.mode06TableWidget->setHorizontalHeaderLabels(QStringList() << "OBDMID" << "TID" << "Value" << "Min" << "Max" << "Passed");
 	for (int i=0;i<midlist.size();i++)
@@ -337,9 +298,11 @@ void MainWindow::obdOnBoardMonitoringReply(QList<unsigned char> midlist,QList<un
 		ui.mode06TableWidget->setItem(i,3,new QTableWidgetItem(minlist[i]));
 		ui.mode06TableWidget->setItem(i,4,new QTableWidgetItem(maxlist[i]));
 		ui.mode06TableWidget->setItem(i,5,new QTableWidgetItem(""));
+		ui.mode06TableWidget->setItem(i,6,new QTableWidgetItem(""));
 		ObdInfo::ModeSixInfo midinfo = obdThread->getInfo()->getInfoFromByte(midlist[i]);
 		ObdInfo::ModeSixInfo tidinfo = obdThread->getInfo()->getTestFromByte(tidlist[i]);
 		qDebug() << QString::number(midlist[i],16) << QString::number(tidlist[i],16) << vallist[i] << minlist[i] << maxlist[i];
+		//ui.mode06TableWidget->item(i,6)->setText(midinfo.);
 		if (tidinfo.id == 0)
 		{
 			//qDebug() << midinfo.description << "MFG Test";
@@ -352,7 +315,7 @@ void MainWindow::obdOnBoardMonitoringReply(QList<unsigned char> midlist,QList<un
 			ui.mode06TableWidget->item(i,0)->setText(QString::number(midlist[i],16) + ":" + midinfo.description);
 			ui.mode06TableWidget->item(i,1)->setText(QString::number(tidlist[i],16) + ":" + tidinfo.description);
 		}
-		ui.mode06TableWidget->item(i,5)->setText(passlist[i]);
+		ui.mode06TableWidget->item(i,6)->setText(passlist[i]);
 	}
 }
 void MainWindow::clearReadPidsTable()
@@ -486,9 +449,15 @@ void MainWindow::uiPidSelectTableClicked(int row, int column)
 		}
 	}
 }
-void MainWindow::obdMonitorStatus(QList<QString> list)
+
+//void MainWindow::obdMonitorStatus(QList<QString> list)
+void MainWindow::obdMonitorStatus(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::MONITOR_COMPLETE_STATUS> list)
 {
-	for (int i=0;i<list.size();i++)
+	ui.conTableWidget->item(0,1)->setText(((list[ObdThread::MISFIRE] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::MISFIRE] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
+	ui.conTableWidget->item(0,1)->setText(((list[ObdThread::FUEL_SYSTEM] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::FUEL_SYSTEM] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
+	ui.conTableWidget->item(0,1)->setText(((list[ObdThread::COMPONENTS] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::COMPONENTS] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
+
+	/*for (int i=0;i<list.size();i++)
 	{
 		if (list[i].size() != 3)
 		{
@@ -512,29 +481,6 @@ void MainWindow::obdMonitorStatus(QList<QString> list)
 	{
 		ui.nonconTableWidget->item(i-3,1)->setText(((list[i][0] == '0') ? "N" : "Y"));
 		ui.nonconTableWidget->item(i-3,2)->setText((list[i][0]=='0') ? "" : (list[i][2] == '1') ? "N" : "Y");
-	}
-	/*if (list[0][0] == '0')
-	{
-		ui.conTableWidget->item(0,1)->setText("N");
-		//Misfire supported
-	}
-	else
-	{
-		ui.conTableWidget->item(0,1)->setText("Y");
-		if (list[0][2] == '1')
-		{
-			//Misfire incomplete
-			ui.conTableWidget->item(0,2)->setText("N");
-		}
-		else
-		{
-			ui.conTableWidget->item(0,2)->setText("Y");
-		}
-
-	}
-	if (list[1][0] == '0')
-	{
-		ui.conTableWidget->item(1,1)->setText("N");
 	}*/
 }
 
@@ -655,20 +601,23 @@ void MainWindow::obdConnected(QString version)
 	ui.connectionInfoTableWidget->item(4,1)->setText(version);
 	//obdThread->switchBaud();
 	//obdThread->sendReqOnBoardMonitors();
-	obdThread->sendReqVoltage();
-	obdThread->sendReqSupportedModes();
-	obdThread->sendReqSupportedPids();
-	obdThread->sendReqMfgString();
+	if (m_permConnect)
+	{
+		obdThread->sendReqVoltage();
+		obdThread->sendReqSupportedModes();
+		obdThread->sendReqSupportedPids();
+		obdThread->sendReqMfgString();
+	}
 	ui.status_comStatusLabel->setText("Status: Connected");
 	ui.status_comInterfaceLabel->setText("Interface: " + version);
 	//ui.status_comBaudLabel->setText()
 }
 void MainWindow::menu_actionConnectClicked()
 {
+	m_permConnect = true;
 	obdThread->connect();
 	ui.status_comStatusLabel->setText("Status: Connecting");
 }
-
 void MainWindow::obdDisconnected()
 {
 	ui.connectionInfoTableWidget->item(3,1)->setText("Disconnected");
@@ -682,8 +631,21 @@ void MainWindow::obdConsoleMessage(QString message)
 void MainWindow::obdTroubleCodes(QList<QString> codes)
 {
 	qDebug() << "Codes:" << codes.size();
-	ui.connectionInfoTableWidget->item(9,1)->setText("Clear");
-	ui.connectionInfoTableWidget->item(10,1)->setText("0");
+	if (codes.size() > 0)
+	{
+		ui.connectionInfoTableWidget->item(9,1)->setText("Illuminated");
+		ui.connectionInfoTableWidget->item(10,1)->setText(QString::number(codes.size()));
+		ui.troubleStoredTableWidget->setRowCount(codes.size());
+		for (int i=0;i<codes.size();i++)
+		{
+			ui.troubleStoredTableWidget->setItem(i,1,new QTableWidgetItem(codes[i]));
+		}
+	}
+	else
+	{
+		ui.connectionInfoTableWidget->item(9,1)->setText("Clear");
+		ui.connectionInfoTableWidget->item(10,1)->setText(0);
+	}
 }
 void MainWindow::obdError(ObdThread::ObdError err)
 {

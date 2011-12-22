@@ -53,10 +53,13 @@ private:
 	int m_baud;
 	void clearReadPidsTable();
 	QMap<QString,ObdThread::RequestClass> m_pidToReqClassMap;
+	bool m_permConnect;
 protected:
 	void resizeEvent(QResizeEvent *evt);
 	void changeEvent(QEvent *evt);
 private slots:
+	void uiTroubleReadClicked();
+	void uiTroubleClearClicked();
 	void menu_actionExit();
 	void menu_actionDisconnectClicked();
 	void uiMonitorButtonClicked();
@@ -64,7 +67,8 @@ private slots:
 	void rawConsoleReturnPressed();
 	void uiPidSelectClearClicked();
 	void uiReadReadinessButtonClicked();
-	void obdMonitorStatus(QList<QString> list);
+	//void obdMonitorStatus(QList<QString> list);
+	void obdMonitorStatus(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::MONITOR_COMPLETE_STATUS> list);
 	void pidsPerSecondTimerTick();
 	void obdSupportedModes(QList<QString> list);
 	void obdVoltage(double volts);

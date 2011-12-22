@@ -6,7 +6,12 @@
 int main(int argc, char **argv)
 {
 	QApplication a(argc,argv);
-
+	int raw = 0x7FFF;
+	double output = ((0xFFFF - raw) + 1) * -1;
+	qDebug() << output;
+	output *= 0.00390625;
+	qDebug() << QString::number(output,'f');
+	//return 0;
 	if (argc >= 2)
 	{
 		if (QString(argv[1]) == QString("qml"))

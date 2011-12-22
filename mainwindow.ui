@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>6</number>
+     <number>7</number>
     </property>
     <widget class="QWidget" name="summaryTab">
      <attribute name="title">
@@ -336,7 +336,7 @@ The more PIDs you select, the slower they will update.</string>
          </widget>
         </item>
         <item>
-         <widget class="QTableWidget" name="tableWidget_2"/>
+         <widget class="QTableWidget" name="troubleStoredTableWidget"/>
         </item>
         <item>
          <widget class="QLabel" name="label_5">
@@ -351,14 +351,14 @@ The more PIDs you select, the slower they will update.</string>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
-           <widget class="QPushButton" name="pushButton_3">
+           <widget class="QPushButton" name="troubleReadPushButton">
             <property name="text">
              <string>Read</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="troubleClearPushButton">
             <property name="text">
              <string>Clear</string>
             </property>
