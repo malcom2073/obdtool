@@ -308,7 +308,7 @@ The more PIDs you select, the slower they will update.</string>
           <item>
            <widget class="QPushButton" name="monitorPushButton">
             <property name="text">
-             <string>PushButton</string>
+             <string>Read Monitors</string>
             </property>
            </widget>
           </item>
