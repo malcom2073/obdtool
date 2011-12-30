@@ -8,6 +8,8 @@ MainWindow::MainWindow() : QMainWindow()
 {
 	ui.setupUi(this);
 
+	m_demoMode = false;
+
 	//Setup all the UI signals, connecting them to slots.
 	connect(ui.actionSettings,SIGNAL(triggered()),this,SLOT(menu_settingsClicked()));
 	connect(ui.actionConnect,SIGNAL(triggered()),this,SLOT(menu_actionConnectClicked()));
@@ -27,7 +29,7 @@ MainWindow::MainWindow() : QMainWindow()
 	//OBDThread setup and signal connections.
 	obdThread = new ObdThread(this);
 	QObject::connect(obdThread,SIGNAL(pidReply(QString,QString,int,double)),this,SLOT(obdPidReceived(QString,QString,int,double)));
-	QObject::connect(obdThread,SIGNAL(troubleCodesReply(QList<QString>)),this,SLOT(obdTroubleCodes(QList<QString>)));
+	QObject::connect(obdThread,SIGNAL(troubleCodesReply(QString,QList<QString>)),this,SLOT(obdTroubleCodes(QString,QList<QString>)));
 	QObject::connect(obdThread,SIGNAL(consoleMessage(QString)),this,SLOT(obdConsoleMessage(QString)));
 	QObject::connect(obdThread,SIGNAL(connected(QString)),this,SLOT(obdConnected(QString)));
 	QObject::connect(obdThread,SIGNAL(disconnected()),this,SLOT(obdDisconnected()));
@@ -38,10 +40,12 @@ MainWindow::MainWindow() : QMainWindow()
 	QObject::connect(obdThread,SIGNAL(supportedModesReply(QList<QString>)),this,SLOT(obdSupportedModes(QList<QString>)));
 	QObject::connect(obdThread,SIGNAL(mfgStringReply(QString)),this,SLOT(obdMfgString(QString)));
 	QObject::connect(obdThread,SIGNAL(voltageReply(double)),this,SLOT(obdVoltage(double)));
-	QObject::connect(obdThread,SIGNAL(monitorTestReply(QList<QString>)),this,SLOT(obdMonitorStatus(QList<QString>)));
+	//QObject::connect(obdThread,SIGNAL(monitorTestReply(QList<QString>)),this,SLOT(obdMonitorStatus(QList<QString>)));
+	QObject::connect(obdThread,SIGNAL(monitorTestReply(QMap<CONTINUOUS_MONITOR,MONITOR_COMPLETE_STATUS>)),this,SLOT(obdMonitorStatus(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::MONITOR_COMPLETE_STATUS>)));
 	QObject::connect(obdThread,SIGNAL(onBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>,QList<QString>)),this,SLOT(obdOnBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>,QList<QString>)));
-	obdThread->start();
 
+	obdThread->start();
+//monitorTestReply(QMap<CONTINUOUS_MONITOR,MONITOR_COMPLETE_STATUS> monitorlist)
 
 	//Timer to count how quickly we are reading pids.
 	pidsPerSecondTimer = new QTimer(this);
@@ -58,16 +62,21 @@ MainWindow::MainWindow() : QMainWindow()
 	ui.connectionInfoTableWidget->verticalHeader()->hide();
 	ui.connectionInfoTableWidget->setItem(0,0,new QTableWidgetItem("Com Port"));
 	ui.connectionInfoTableWidget->setItem(1,0,new QTableWidgetItem("Baud Rate"));
-	ui.connectionInfoTableWidget->setItem(2,0,new QTableWidgetItem("Region Information"));
+	//ui.connectionInfoTableWidget->setItem(2,0,new QTableWidgetItem("Region Information"));
+	ui.connectionInfoTableWidget->hideRow(2);
 	ui.connectionInfoTableWidget->setItem(3,0,new QTableWidgetItem("Connection State"));
 	ui.connectionInfoTableWidget->setItem(4,0,new QTableWidgetItem("Interface"));
 	ui.connectionInfoTableWidget->setItem(5,0,new QTableWidgetItem("Scan Tool"));
 	ui.connectionInfoTableWidget->setItem(6,0,new QTableWidgetItem("OBD Protocol"));
 	ui.connectionInfoTableWidget->setItem(7,0,new QTableWidgetItem("Vehicle Battery Voltage"));
 	ui.connectionInfoTableWidget->setItem(8,0,new QTableWidgetItem("OBD Requirements"));
+	ui.connectionInfoTableWidget->hideRow(8);
 	ui.connectionInfoTableWidget->setItem(9,0,new QTableWidgetItem("MIL Status"));
+	ui.connectionInfoTableWidget->hideRow(9);
 	ui.connectionInfoTableWidget->setItem(10,0,new QTableWidgetItem("DTC's present"));
+	ui.connectionInfoTableWidget->hideRow(10);
 	ui.connectionInfoTableWidget->setItem(11,0,new QTableWidgetItem("Engine"));
+	ui.connectionInfoTableWidget->hideRow(11);
 	ui.connectionInfoTableWidget->setItem(12,0,new QTableWidgetItem("Service $05 - O2 Sensors"));
 	ui.connectionInfoTableWidget->setItem(13,0,new QTableWidgetItem("Service $06 - On Board Monitoring"));
 	ui.connectionInfoTableWidget->setItem(14,0,new QTableWidgetItem("Service $08 - In Use Performance Tracking"));
@@ -216,12 +225,26 @@ MainWindow::MainWindow() : QMainWindow()
 	//ui.troubleCodesTab->hide();
 	//ui.onBoardMonitoringTab->hide();
 	//ui.tabWidget->hide();
-	//ui.tabWidget->removeTab(2);
-	//ui.tabWidget->removeTab(3);
-	//ui.tabWidget->removeTab(3);
-	//ui.tabWidget->removeTab(3);
-	//ui.tabWidget->removeTab(3);
-
+	if (m_demoMode)
+	{
+	ui.tabWidget->removeTab(2);
+	ui.tabWidget->removeTab(3);
+	ui.tabWidget->removeTab(3);
+	ui.tabWidget->removeTab(3);
+	ui.tabWidget->removeTab(3);
+	}
+	m_demoPidList.append("0104");
+	m_demoPidList.append("0105");
+	m_demoPidList.append("0106");
+	m_demoPidList.append("0107");
+	m_demoPidList.append("0108");
+	m_demoPidList.append("0109");
+	m_demoPidList.append("010C");
+	m_demoPidList.append("010D");
+	m_demoPidList.append("010F");
+	m_demoPidList.append("0110");
+	m_demoPidList.append("0111");
+	m_demoPidList.append("011F");
 
 }
 void MainWindow::uiTroubleClearClicked()
@@ -231,6 +254,7 @@ void MainWindow::uiTroubleClearClicked()
 
 void MainWindow::uiTroubleReadClicked()
 {
+	ui.troubleStoredTableWidget->setRowCount(0);
 	obdThread->sendReqTroubleCodes();
 }
 
@@ -439,6 +463,7 @@ void MainWindow::uiPidSelectTableClicked(int row, int column)
 			{
 				//Pid is not currently on our list! Let's add it.
 				//addReadPidRow(ui.pidSelectTableWidget->item(i,0)->text(),ui.pidSelectTableWidget->item(i,2)->text().toInt());
+				//We no longer do this here. We only add rows when you hit save.
 			}
 		}
 		else
@@ -450,81 +475,57 @@ void MainWindow::uiPidSelectTableClicked(int row, int column)
 	}
 }
 
-//void MainWindow::obdMonitorStatus(QList<QString> list)
 void MainWindow::obdMonitorStatus(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::MONITOR_COMPLETE_STATUS> list)
 {
 	ui.conTableWidget->item(0,1)->setText(((list[ObdThread::MISFIRE] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::MISFIRE] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
 	ui.conTableWidget->item(0,1)->setText(((list[ObdThread::FUEL_SYSTEM] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::FUEL_SYSTEM] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
 	ui.conTableWidget->item(0,1)->setText(((list[ObdThread::COMPONENTS] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::COMPONENTS] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
-
-	/*for (int i=0;i<list.size();i++)
-	{
-		if (list[i].size() != 3)
-		{
-			qDebug() << "Invalid obdMonitorStatus returned:" << list[i] << "line" << i;
-			return;
-		}
-	}
-	if (list.size() != 11)
-	{
-		qDebug() << "Invalid list size returned for obdMonitorStatus." << list.size();
-		return;
-	}
-	//ui.conTableWidget->item(0,1)->setText(((list[0][0] == '0') ? "N" : "Y"));
-	//ui.conTableWidget->item(0,2)->setText((list[0][0]=='0') ? "" : (list[0][2] == '1') ? "N" : "Y");
-	for (int i=0;i<3;i++)
-	{
-		ui.conTableWidget->item(i,1)->setText(((list[i][0] == '0') ? "N" : "Y"));
-		ui.conTableWidget->item(i,2)->setText((list[i][0]=='0') ? "" : (list[i][2] == '1') ? "N" : "Y");
-	}
-	for (int i=3;i<list.size();i++)
-	{
-		ui.nonconTableWidget->item(i-3,1)->setText(((list[i][0] == '0') ? "N" : "Y"));
-		ui.nonconTableWidget->item(i-3,2)->setText((list[i][0]=='0') ? "" : (list[i][2] == '1') ? "N" : "Y");
-	}*/
 }
 
 MainWindow::~MainWindow()
 {
-//	obdThread->disconnect();
-//	while (obdThread->isRunning());
-//	delete obdThread;
 }
 void MainWindow::menu_settingsClicked()
 {
 	settingsWidget = new SettingsWidget();
 	connect(settingsWidget,SIGNAL(saveSettings(QString,int)),this,SLOT(settings_saveComPort(QString,int)));
-	//QMdiSubWindow *win = ui.mdiArea->addSubWindow(settingsWidget);
-	//win->setGeometry(100,100,311,156);
 	settingsWidget->setSettings(m_port,m_baud);
 	settingsWidget->show();
 }
 void MainWindow::obdSupportedPids(QList<QString> pidlist)
 {
 	ui.pidSelectTableWidget->clearContents();
-	ui.pidSelectTableWidget->setRowCount(pidlist.size());
+	ui.pidSelectTableWidget->setRowCount(0);
 	for (int i=0;i<pidlist.size();i++)
 	{
+		if (m_demoMode)
+		{
+			if (!m_demoPidList.contains(pidlist[i]))
+			{
+				continue;
+			}
+		}
+		ui.pidSelectTableWidget->setRowCount(ui.pidSelectTableWidget->rowCount()+1);
 		ObdInfo::Pid *p = obdThread->getInfo()->getPidFromString(pidlist[i]);
 		if (p)
 		{
-			ui.pidSelectTableWidget->setItem(i,0,new QTableWidgetItem(pidlist[i]));
+			ui.pidSelectTableWidget->setItem(ui.pidSelectTableWidget->rowCount()-1,0,new QTableWidgetItem(pidlist[i]));
 			if (!p->bitencoded)
 			{
-			ui.pidSelectTableWidget->item(i,0)->setCheckState(Qt::Checked);
+			ui.pidSelectTableWidget->item(ui.pidSelectTableWidget->rowCount()-1,0)->setCheckState(Qt::Checked);
 			}
 
 			if (obdThread->getInfo()->getPidFromString(pidlist[i]))
 			{
-				ui.pidSelectTableWidget->setItem(i,1,new QTableWidgetItem(p->description));
-				ui.pidSelectTableWidget->setItem(i,2,new QTableWidgetItem("1"));
+				ui.pidSelectTableWidget->setItem(ui.pidSelectTableWidget->rowCount()-1,1,new QTableWidgetItem(p->description));
+				ui.pidSelectTableWidget->setItem(ui.pidSelectTableWidget->rowCount()-1,2,new QTableWidgetItem("1"));
 			}
 		}
 		else
 		{
-			ui.pidSelectTableWidget->setItem(i,0,new QTableWidgetItem(pidlist[i]));
-			ui.pidSelectTableWidget->setItem(i,1,new QTableWidgetItem("INVALID"));
-			ui.pidSelectTableWidget->setItem(i,2,new QTableWidgetItem("1"));
+			ui.pidSelectTableWidget->setItem(ui.pidSelectTableWidget->rowCount()-1,0,new QTableWidgetItem(pidlist[i]));
+			ui.pidSelectTableWidget->setItem(ui.pidSelectTableWidget->rowCount()-1,1,new QTableWidgetItem("INVALID"));
+			ui.pidSelectTableWidget->setItem(ui.pidSelectTableWidget->rowCount()-1,2,new QTableWidgetItem("1"));
 		}
 	}
 }
@@ -628,21 +629,26 @@ void MainWindow::obdConsoleMessage(QString message)
 	ui.debugTextBrowser->append(message);
 }
 
-void MainWindow::obdTroubleCodes(QList<QString> codes)
+void MainWindow::obdTroubleCodes(QString ecu,QList<QString> codes)
 {
 	qDebug() << "Codes:" << codes.size();
 	if (codes.size() > 0)
 	{
 		ui.connectionInfoTableWidget->item(9,1)->setText("Illuminated");
 		ui.connectionInfoTableWidget->item(10,1)->setText(QString::number(codes.size()));
-		ui.troubleStoredTableWidget->setRowCount(codes.size());
+		int counter = ui.troubleStoredTableWidget->rowCount();
+		ui.troubleStoredTableWidget->setRowCount(counter + codes.size());
 		for (int i=0;i<codes.size();i++)
 		{
-			ui.troubleStoredTableWidget->setItem(i,1,new QTableWidgetItem(codes[i]));
+			ui.troubleStoredTableWidget->setItem(counter+i,0,new QTableWidgetItem(ecu));
+			ui.troubleStoredTableWidget->setItem(counter+i,1,new QTableWidgetItem(codes[i]));
 		}
 	}
 	else
 	{
+		ui.troubleStoredTableWidget->setRowCount(1);
+		ui.troubleStoredTableWidget->setItem(0,0,new QTableWidgetItem());
+		ui.troubleStoredTableWidget->setItem(0,1,new QTableWidgetItem("No Codes"));
 		ui.connectionInfoTableWidget->item(9,1)->setText("Clear");
 		ui.connectionInfoTableWidget->item(10,1)->setText(0);
 	}

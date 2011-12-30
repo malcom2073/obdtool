@@ -54,6 +54,8 @@ private:
 	void clearReadPidsTable();
 	QMap<QString,ObdThread::RequestClass> m_pidToReqClassMap;
 	bool m_permConnect;
+	QList<QString> m_demoPidList;
+	bool m_demoMode;
 protected:
 	void resizeEvent(QResizeEvent *evt);
 	void changeEvent(QEvent *evt);
@@ -81,7 +83,7 @@ private slots:
 	void menu_settingsClicked();
 	void settings_saveComPort(QString port,int baud);
 	void obdPidReceived(QString pid,QString val,int set, double time);
-	void obdTroubleCodes(QList<QString> codes);
+	void obdTroubleCodes(QString ecu,QList<QString> codes);
 	void obdConsoleMessage(QString message);
 	void obdConnected(QString version);
 	void obdProtocolFound(QString protocol);
