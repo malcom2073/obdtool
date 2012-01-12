@@ -41,8 +41,9 @@ MainWindow::MainWindow() : QMainWindow()
 	QObject::connect(obdThread,SIGNAL(mfgStringReply(QString)),this,SLOT(obdMfgString(QString)));
 	QObject::connect(obdThread,SIGNAL(voltageReply(double)),this,SLOT(obdVoltage(double)));
 	//QObject::connect(obdThread,SIGNAL(monitorTestReply(QList<QString>)),this,SLOT(obdMonitorStatus(QList<QString>)));
-	QObject::connect(obdThread,SIGNAL(monitorTestReply(QMap<CONTINUOUS_MONITOR,MONITOR_COMPLETE_STATUS>)),this,SLOT(obdMonitorStatus(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::MONITOR_COMPLETE_STATUS>)));
+	QObject::connect(obdThread,SIGNAL(monitorTestReply(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::MONITOR_COMPLETE_STATUS>)),this,SLOT(obdMonitorStatus(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::MONITOR_COMPLETE_STATUS>)));
 	QObject::connect(obdThread,SIGNAL(onBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>,QList<QString>)),this,SLOT(obdOnBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>,QList<QString>)));
+	QObject::connect(obdThread,SIGNAL(rawCommsLog(QString)),this,SLOT(obdRawCommLog(QString)));
 
 	obdThread->start();
 //monitorTestReply(QMap<CONTINUOUS_MONITOR,MONITOR_COMPLETE_STATUS> monitorlist)
@@ -281,6 +282,10 @@ void MainWindow::menu_actionDisconnectClicked()
 {
 	obdThread->disconnect();
 }
+void MainWindow::obdRawCommLog(QString msg)
+{
+	ui.debugTextBrowser->append(msg.replace("\r","").replace("\n",""));
+}
 
 void MainWindow::connectButtonClicked()
 {
@@ -478,8 +483,17 @@ void MainWindow::uiPidSelectTableClicked(int row, int column)
 void MainWindow::obdMonitorStatus(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::MONITOR_COMPLETE_STATUS> list)
 {
 	ui.conTableWidget->item(0,1)->setText(((list[ObdThread::MISFIRE] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::MISFIRE] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
-	ui.conTableWidget->item(0,1)->setText(((list[ObdThread::FUEL_SYSTEM] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::FUEL_SYSTEM] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
-	ui.conTableWidget->item(0,1)->setText(((list[ObdThread::COMPONENTS] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::COMPONENTS] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
+	ui.conTableWidget->item(1,1)->setText(((list[ObdThread::FUEL_SYSTEM] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::FUEL_SYSTEM] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
+	ui.conTableWidget->item(2,1)->setText(((list[ObdThread::COMPONENTS] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::COMPONENTS] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
+
+	ui.nonconTableWidget->item(0,1)->setText(((list[ObdThread::CATALYST] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::CATALYST] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
+	ui.nonconTableWidget->item(1,1)->setText(((list[ObdThread::HEATED_CATALYST] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::HEATED_CATALYST] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
+	ui.nonconTableWidget->item(2,1)->setText(((list[ObdThread::EVAPORATIVE_SYSTEM] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::EVAPORATIVE_SYSTEM] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
+	ui.nonconTableWidget->item(3,1)->setText(((list[ObdThread::SECONDARY_AIR_SYSTEM] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::SECONDARY_AIR_SYSTEM] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
+	ui.nonconTableWidget->item(4,1)->setText(((list[ObdThread::AC_REFRIGERANT] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::AC_REFRIGERANT] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
+	ui.nonconTableWidget->item(5,1)->setText(((list[ObdThread::OXYGEN_SENSOR] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::OXYGEN_SENSOR] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
+	ui.nonconTableWidget->item(6,1)->setText(((list[ObdThread::OXYGEN_SENSOR_HEATER] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::OXYGEN_SENSOR_HEATER] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
+	ui.nonconTableWidget->item(7,1)->setText(((list[ObdThread::EGR_SYSTEM] == ObdThread::UNAVAILABLE) ? "Unavailable" : ((list[ObdThread::EGR_SYSTEM] == ObdThread::COMPLETE) ? "Complete" : "Incomplete")));
 }
 
 MainWindow::~MainWindow()

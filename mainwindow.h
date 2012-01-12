@@ -60,6 +60,7 @@ protected:
 	void resizeEvent(QResizeEvent *evt);
 	void changeEvent(QEvent *evt);
 private slots:
+	void obdRawCommLog(QString msg);
 	void uiTroubleReadClicked();
 	void uiTroubleClearClicked();
 	void menu_actionExit();
