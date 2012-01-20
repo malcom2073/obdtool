@@ -25,7 +25,7 @@
 GaugeWidget::GaugeWidget(QWidget *parent) : QWidget(parent)
 {
 	m_fake = false;
-	m_style = 1;
+	m_style = 3;
 	m_fadeEnabled = false;
 	setAttribute(Qt::WA_OpaquePaintEvent,true);
 	resizeDraw = false;

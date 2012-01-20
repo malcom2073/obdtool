@@ -107,6 +107,7 @@ private:
 	QPen warningTickPen;
 	QPen warningBigTickPen;
 	QFont labelFont;
+	QFont labelSmallFont;
 	int fadeCount;
 private slots:
 	void timerTick();

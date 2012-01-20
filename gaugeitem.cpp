@@ -26,7 +26,7 @@ GaugeItem::GaugeItem() : QDeclarativeItem()
 {
 	setFlag(QGraphicsItem::ItemHasNoContents, false);
 	m_fake = false;
-	m_style = 1;
+	m_style = 3;
 	m_fadeEnabled = false;
 //	setAttribute(Qt::WA_OpaquePaintEvent,true);
 	resizeDraw = false;
@@ -77,8 +77,9 @@ GaugeItem::GaugeItem() : QDeclarativeItem()
 	dangerFontPen.setColor(QColor(255,0,0));
 	warningFontPen.setColor(QColor(255,255,0));
 	labelFont.setFamily("Ariel");
-	labelFont.setPixelSize(20);
-
+	labelFont.setPixelSize(25);
+	labelSmallFont.setFamily("Ariel");
+	labelSmallFont.setPixelSize(18);
 }
 /*void GaugeItem::resizeEvent (QResizeEvent *evt)
 {
@@ -331,121 +332,343 @@ void GaugeItem::drawBackground(QPainter *painter)
 
 		if (this->width() < 250)
 		{
-		for (int i = 0; i <= ((_numLabels) * 5); i++)
-		{
-			x = (float)(cos((i * ((_scaleEndAngle - _scaleStartAngle) / (_numLabels * 5.0)) + 90.0 + _scaleStartAngle) * M_PI / 180)); //* (this.Size.Width / 2) + (this.Size.Width));
-			y = (float)(sin((i * ((_scaleEndAngle - _scaleStartAngle) / (_numLabels * 5.0)) + 90.0 + _scaleStartAngle) * M_PI / 180)); //* (this.Size.Height / 2) + (this.Size.Height));
-			if (((i % 5) == 0) && (!((i % 20) == 0)))
+			for (int i = 0; i <= ((_numLabels) * 5); i++)
 			{
-				if (((float)i / (float)(_numLabels * 5)) > _danger)
+				x = (float)(cos((i * ((_scaleEndAngle - _scaleStartAngle) / (_numLabels * 5.0)) + 90.0 + _scaleStartAngle) * M_PI / 180)); //* (this.Size.Width / 2) + (this.Size.Width));
+				y = (float)(sin((i * ((_scaleEndAngle - _scaleStartAngle) / (_numLabels * 5.0)) + 90.0 + _scaleStartAngle) * M_PI / 180)); //* (this.Size.Height / 2) + (this.Size.Height));
+				if (((i % 5) == 0) && (!((i % 20) == 0)))
 				{
-					tmpPainter.setPen(dangerBigTickPen);
+					if (((float)i / (float)(_numLabels * 5)) > _danger)
+					{
+						tmpPainter.setPen(dangerBigTickPen);
+					}
+					else if (((float)i / (float)(_numLabels * 5)) > _warning)
+					{
+						tmpPainter.setPen(warningBigTickPen);
+					}
+					else
+					{
+						tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
+					}
+					tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.08)) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.08)) + ((internalHeight / 2)+heightOffset));
 				}
-				else if (((float)i / (float)(_numLabels * 5)) > _warning)
+				/*else if ((i % 20) == 0)
 				{
-					tmpPainter.setPen(warningBigTickPen);
-				}
+					if (((float)i / (float)(_numLabels * 20)) > _danger)
+					{
+						tmpPainter->setPen(dangerBigTickPen);
+					}
+					else if (((float)i / (float)(_numLabels * 20)) > _warning)
+					{
+						tmpPainter->setPen(warningBigTickPen);
+					}
+					else
+					{
+						tmpPainter->setPen(QPen(QColor::fromRgb(200,200,200)));
+					}
+					tmpPainter->drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.1)) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.1)) + ((internalHeight / 2)+heightOffset));
+				}*/
 				else
 				{
-					tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
-				}
-				tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.08)) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.08)) + ((internalHeight / 2)+heightOffset));
-			}
-			/*else if ((i % 20) == 0)
-			{
-				if (((float)i / (float)(_numLabels * 20)) > _danger)
-				{
-					tmpPainter->setPen(dangerBigTickPen);
-				}
-				else if (((float)i / (float)(_numLabels * 20)) > _warning)
-				{
-					tmpPainter->setPen(warningBigTickPen);
-				}
-				else
-				{
-					tmpPainter->setPen(QPen(QColor::fromRgb(200,200,200)));
-				}
-				tmpPainter->drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.1)) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.1)) + ((internalHeight / 2)+heightOffset));
-			}*/
-			else
-			{
-				if (((float)i / (float)(_numLabels * 5)) > _danger)
-				{
-					tmpPainter.setPen(dangerTickPen);
-				}
-				else if (((float)i / (float)(_numLabels * 5)) > _warning)
-				{
-					tmpPainter.setPen(warningTickPen);
-				}
-				else
-				{
-					tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
-				}
+					if (((float)i / (float)(_numLabels * 5)) > _danger)
+					{
+						tmpPainter.setPen(dangerTickPen);
+					}
+					else if (((float)i / (float)(_numLabels * 5)) > _warning)
+					{
+						tmpPainter.setPen(warningTickPen);
+					}
+					else
+					{
+						tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
+					}
 
-				tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2) + widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.05)) + ((internalWidth / 2) + widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.05)) + ((internalHeight / 2) + heightOffset));
+					tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2) + widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.05)) + ((internalWidth / 2) + widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.05)) + ((internalHeight / 2) + heightOffset));
+				}
 			}
-		}
 
 		}
 		else
 		{
 
 
-		for (int i = 0; i <= ((_numLabels) * 20); i++)
-		{
-			x = (float)(cos((i * ((_scaleEndAngle - _scaleStartAngle) / (_numLabels * 20.0)) + 90.0 + _scaleStartAngle) * M_PI / 180)); //* (this.Size.Width / 2) + (this.Size.Width));
-			y = (float)(sin((i * ((_scaleEndAngle - _scaleStartAngle) / (_numLabels * 20.0)) + 90.0 + _scaleStartAngle) * M_PI / 180)); //* (this.Size.Height / 2) + (this.Size.Height));
-			if (((i % 5) == 0) && (!((i % 20) == 0)))
+			for (int i = 0; i <= ((_numLabels) * 20); i++)
 			{
-				if (((float)i / (float)(_numLabels * 20)) > _danger)
+				x = (float)(cos((i * ((_scaleEndAngle - _scaleStartAngle) / (_numLabels * 20.0)) + 90.0 + _scaleStartAngle) * M_PI / 180)); //* (this.Size.Width / 2) + (this.Size.Width));
+				y = (float)(sin((i * ((_scaleEndAngle - _scaleStartAngle) / (_numLabels * 20.0)) + 90.0 + _scaleStartAngle) * M_PI / 180)); //* (this.Size.Height / 2) + (this.Size.Height));
+				if (((i % 5) == 0) && (!((i % 20) == 0)))
 				{
-					tmpPainter.setPen(dangerBigTickPen);
+					if (((float)i / (float)(_numLabels * 20)) > _danger)
+					{
+						tmpPainter.setPen(dangerBigTickPen);
+					}
+					else if (((float)i / (float)(_numLabels * 20)) > _warning)
+					{
+						tmpPainter.setPen(warningBigTickPen);
+					}
+					else
+					{
+						tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
+					}
+					tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.08)) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.08)) + ((internalHeight / 2)+heightOffset));
 				}
-				else if (((float)i / (float)(_numLabels * 20)) > _warning)
+				else if ((i % 20) == 0)
 				{
-					tmpPainter.setPen(warningBigTickPen);
+					if (((float)i / (float)(_numLabels * 20)) > _danger)
+					{
+						tmpPainter.setPen(dangerBigTickPen);
+					}
+					else if (((float)i / (float)(_numLabels * 20)) > _warning)
+					{
+						tmpPainter.setPen(warningBigTickPen);
+					}
+					else
+					{
+						tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
+					}
+					tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.1)) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.1)) + ((internalHeight / 2)+heightOffset));
 				}
 				else
 				{
-					tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
+					if (((float)i / (float)(_numLabels * 20)) > _danger)
+					{
+						tmpPainter.setPen(dangerTickPen);
+					}
+					else if (((float)i / (float)(_numLabels * 20)) > _warning)
+					{
+						tmpPainter.setPen(warningTickPen);
+					}
+					else
+					{
+						tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
+					}
+
+					tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2) + widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.05)) + ((internalWidth / 2) + widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.05)) + ((internalHeight / 2) + heightOffset));
 				}
-				tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.08)) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.08)) + ((internalHeight / 2)+heightOffset));
 			}
-			else if ((i % 20) == 0)
+		}
+
+	}
+	else if (m_style == 3)
+	{
+		//qDebug() << "Draw";
+		int internalWidth = width() * 0.90;
+		int internalHeight = height() * 0.90;
+		int widthOffset = width() * 0.05;
+		int heightOffset = height() * 0.05;
+		QPainter tmpPainter(_bgImage);
+		tmpPainter.setRenderHint(QPainter::Antialiasing);
+		//tmpPainter.setBrush(Qt::SolidPattern);
+		tmpPainter.setPen(QPen(QColor(255,0,0,255)));
+		//tmpPainter.drawEllipse(0,0,width(),height());
+		float counter = 0;
+		for (float i=internalWidth;i<=(width() - ((width() - internalWidth)/2));i+=0.1)
+		{
+			counter+=0.5;
+
+			//tmpPainter.setPen(QPen(QColor(255.0 * (1.0-((float)(internalWidth - i) / (internalWidth - (width() - ((width() - internalWidth)/2))))),160.0 * (1.0-((float)(internalWidth - i) / (internalWidth - (width() - ((width() - internalWidth)/2))))),0)));
+			int random = rand() % 100 + 155;
+			tmpPainter.setPen(QPen(QColor(random,random,random,(int)counter % 255)));
+			//qDebug() << (internalWidth - i) + widthOffset << (internalWidth-i) + heightOffset << i << widthOffset << (internalWidth-i);
+			//qDebug() << 255 * ((float)(internalWidth - i) / (internalWidth - (width() - ((width() - internalWidth)/2))));
+			//tmpPainter.drawEllipse(widthOffset+(internalWidth - i),heightOffset+(internalWidth - i),i-(internalWidth-i),i - (internalWidth-i));
+			//qDebug() << _scaleStartAngle << _scaleEndAngle;
+			tmpPainter.drawArc(widthOffset+(internalWidth - i),heightOffset+(internalWidth - i),i-(internalWidth-i),i - (internalWidth-i),(_scaleStartAngle + 270) * 16,(_scaleEndAngle - _scaleStartAngle) * 16);
+		}
+		//double ellipseA = 100;
+		//double ellipseB = 75;
+		//int topellipsex = 1;
+		//int topellipsey = 1;
+		//int topellipsewidth=198;
+		//int topellipseheight=150;
+
+		tmpPainter.setBrush(Qt::SolidPattern);
+		//tmpPainter.drawRect(0,0,width(),height());
+		//tmpPainter.drawEllipse(widthOffset,heightOffset,internalWidth,internalHeight);
+		//myGraphics.FillEllipse(_inFillPen.Brush, 0, 0, this.Size.Width - 1, this.Size.Height - 1);
+		tmpPainter.setPen(QPen(QColor::fromRgb(100,100,100)));
+		float x=0;
+		float y=0;
+		//Draw Labels
+		for (int i = 0; i < _numLabels + ((_scaleEndAngle - _scaleStartAngle) == 360 ? 0 : 1); i++)
+		{
+			if (_reverseOrder)
 			{
-				if (((float)i / (float)(_numLabels * 20)) > _danger)
-				{
-					tmpPainter.setPen(dangerBigTickPen);
-				}
-				else if (((float)i / (float)(_numLabels * 20)) > _warning)
-				{
-					tmpPainter.setPen(warningBigTickPen);
-				}
-				else
-				{
-					tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
-				}
-				tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.1)) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.1)) + ((internalHeight / 2)+heightOffset));
+				x = (float)((cos((((_scaleEndAngle - _scaleStartAngle)) - (i * ((_scaleEndAngle - _scaleStartAngle) / _numLabels)) - 270 + _scaleStartAngle) * M_PI / 180) * (internalWidth - (internalWidth / 3)) / 2.0)) + ((internalWidth) / 2);
+				y = (float)((sin((((_scaleEndAngle - _scaleStartAngle)) - (i * ((_scaleEndAngle - _scaleStartAngle) / _numLabels)) - 270 + _scaleStartAngle) * M_PI / 180) * (internalHeight - (internalHeight / 3)) / 2.0)) + ((internalHeight) / 2);
 			}
 			else
 			{
-				if (((float)i / (float)(_numLabels * 20)) > _danger)
+				//Need a sliding scale of label offsets, due to the size of text in relation to the size of the gauge.
+				if (this->width() > 300)
 				{
-					tmpPainter.setPen(dangerTickPen);
+					x = (float)((cos(((i * ((_scaleEndAngle - _scaleStartAngle) / _numLabels)) - 270 + _scaleStartAngle) * M_PI / 180) * (internalWidth - (internalWidth / 3)) / 2.0)) + ((internalWidth) / 2) + widthOffset;
+					y = (float)((sin(((i * ((_scaleEndAngle - _scaleStartAngle) / _numLabels)) - 270 + _scaleStartAngle) * M_PI / 180) * (internalHeight - (internalHeight / 3)) / 2.0)) + ((internalHeight) / 2) + heightOffset;
 				}
-				else if (((float)i / (float)(_numLabels * 20)) > _warning)
+				else if (this->width() > 250)
 				{
-					tmpPainter.setPen(warningTickPen);
+					x = (float)((cos(((i * ((_scaleEndAngle - _scaleStartAngle) / _numLabels)) - 270 + _scaleStartAngle) * M_PI / 180) * (internalWidth - (internalWidth / 3)) / 2.3)) + ((internalWidth) / 2) + widthOffset;
+					y = (float)((sin(((i * ((_scaleEndAngle - _scaleStartAngle) / _numLabels)) - 270 + _scaleStartAngle) * M_PI / 180) * (internalHeight - (internalHeight / 3)) / 2.3)) + ((internalHeight) / 2) + heightOffset;
 				}
 				else
 				{
-					tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
+					x = (float)((cos(((i * ((_scaleEndAngle - _scaleStartAngle) / _numLabels)) - 270 + _scaleStartAngle) * M_PI / 180) * (internalWidth - (internalWidth / 3)) / 2.5)) + ((internalWidth) / 2) + widthOffset;
+					y = (float)((sin(((i * ((_scaleEndAngle - _scaleStartAngle) / _numLabels)) - 270 + _scaleStartAngle) * M_PI / 180) * (internalHeight - (internalHeight / 3)) / 2.5)) + ((internalHeight) / 2) + heightOffset;
 				}
+			}
+			QString val = "";
+			val = QString::number(((int)((i * ((_maxValue - _minValue) / _numLabels)) + _minValue)));
+			if (((float)i / (float)_numLabels) > _danger)
+			{
+				tmpPainter.setPen(dangerFontPen);
+			//	myGraphics.DrawString(val, _myFont, _fontDangerPen.Brush, x - (_myFont.Size / 2) * val.Length, y - (_myFont.Height / 2));
+			}
+			else if (((float)i / (float)_numLabels) > _warning)
+			{
+				tmpPainter.setPen(warningFontPen);
+			//	myGraphics.DrawString(val, _myFont, _fontWarningPen.Brush, x - (_myFont.Size / 2) * val.Length, y - (_myFont.Height / 2));
+			}
+			else
+			{
+				tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
+			//	myGraphics.DrawString(val, _myFont, _fontPen.Brush, x - (_myFont.Size / 2) * val.Length, y - (_myFont.Height / 2));
+			}
+			if (this->width() > 250)
+			{
+				QFontMetrics fm(labelFont);
+				tmpPainter.setFont(labelFont);
+				tmpPainter.drawText(QPointF(x - (fm.width(val)/2),y+3),val);
+			}
+			else
+			{
+				QFontMetrics fm(labelSmallFont);
+				tmpPainter.setFont(labelSmallFont);
+				tmpPainter.drawText(QPointF(x - (fm.width(val)/2),y+3),val);
 
-				tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2) + widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.05)) + ((internalWidth / 2) + widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.05)) + ((internalHeight / 2) + heightOffset));
 			}
 		}
+
+
+		//Draw Ticks
+		if (this->width() < 250)
+		{
+			for (int i = 0; i <= ((_numLabels) * 5); i++)
+			{
+				x = (float)(cos((i * ((_scaleEndAngle - _scaleStartAngle) / (_numLabels * 5.0)) + 90.0 + _scaleStartAngle) * M_PI / 180)); //* (this.Size.Width / 2) + (this.Size.Width));
+				y = (float)(sin((i * ((_scaleEndAngle - _scaleStartAngle) / (_numLabels * 5.0)) + 90.0 + _scaleStartAngle) * M_PI / 180)); //* (this.Size.Height / 2) + (this.Size.Height));
+				if (((i % 5) == 0) && (!((i % 20) == 0)))
+				{
+					if (((float)i / (float)(_numLabels * 5)) > _danger)
+					{
+						tmpPainter.setPen(dangerBigTickPen);
+					}
+					else if (((float)i / (float)(_numLabels * 5)) > _warning)
+					{
+						tmpPainter.setPen(warningBigTickPen);
+					}
+					else
+					{
+						tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
+					}
+					tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.1)) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.1)) + ((internalHeight / 2)+heightOffset));
+				}
+				/*else if ((i % 20) == 0)
+				{
+					if (((float)i / (float)(_numLabels * 20)) > _danger)
+					{
+						tmpPainter->setPen(dangerBigTickPen);
+					}
+					else if (((float)i / (float)(_numLabels * 20)) > _warning)
+					{
+						tmpPainter->setPen(warningBigTickPen);
+					}
+					else
+					{
+						tmpPainter->setPen(QPen(QColor::fromRgb(200,200,200)));
+					}
+					tmpPainter->drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.1)) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.1)) + ((internalHeight / 2)+heightOffset));
+				}*/
+				else
+				{
+					if (((float)i / (float)(_numLabels * 5)) > _danger)
+					{
+						tmpPainter.setPen(dangerTickPen);
+					}
+					else if (((float)i / (float)(_numLabels * 5)) > _warning)
+					{
+						tmpPainter.setPen(warningTickPen);
+					}
+					else
+					{
+						tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
+					}
+
+					tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2) + widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.08)) + ((internalWidth / 2) + widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.08)) + ((internalHeight / 2) + heightOffset));
+				}
+			}
+
 		}
+		else
+		{
+
+
+			for (int i = 0; i <= ((_numLabels) * 20); i++)
+			{
+				x = (float)(cos((i * ((_scaleEndAngle - _scaleStartAngle) / (_numLabels * 20.0)) + 90.0 + _scaleStartAngle) * M_PI / 180)); //* (this.Size.Width / 2) + (this.Size.Width));
+				y = (float)(sin((i * ((_scaleEndAngle - _scaleStartAngle) / (_numLabels * 20.0)) + 90.0 + _scaleStartAngle) * M_PI / 180)); //* (this.Size.Height / 2) + (this.Size.Height));
+				if (((i % 5) == 0) && (!((i % 20) == 0)))
+				{
+					if (((float)i / (float)(_numLabels * 20)) > _danger)
+					{
+						tmpPainter.setPen(dangerBigTickPen);
+					}
+					else if (((float)i / (float)(_numLabels * 20)) > _warning)
+					{
+						tmpPainter.setPen(warningBigTickPen);
+					}
+					else
+					{
+						tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
+					}
+					tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.08)) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.08)) + ((internalHeight / 2)+heightOffset));
+				}
+				else if ((i % 20) == 0)
+				{
+					if (((float)i / (float)(_numLabels * 20)) > _danger)
+					{
+						tmpPainter.setPen(dangerBigTickPen);
+					}
+					else if (((float)i / (float)(_numLabels * 20)) > _warning)
+					{
+						tmpPainter.setPen(warningBigTickPen);
+					}
+					else
+					{
+						tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
+					}
+					tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.1)) + ((internalWidth / 2)+widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.1)) + ((internalHeight / 2)+heightOffset));
+				}
+				else
+				{
+					if (((float)i / (float)(_numLabels * 20)) > _danger)
+					{
+						tmpPainter.setPen(dangerTickPen);
+					}
+					else if (((float)i / (float)(_numLabels * 20)) > _warning)
+					{
+						tmpPainter.setPen(warningTickPen);
+					}
+					else
+					{
+						tmpPainter.setPen(QPen(QColor::fromRgb(200,200,200)));
+					}
+
+					tmpPainter.drawLine(x * ((internalWidth / 2) - 10) + ((internalWidth / 2) + widthOffset), y * ((internalHeight / 2) - 10) + ((internalHeight / 2)+heightOffset),x * ((internalWidth  / 2) - (internalWidth * 0.05)) + ((internalWidth / 2) + widthOffset), y * ((internalHeight / 2) - (internalHeight * 0.05)) + ((internalHeight / 2) + heightOffset));
+				}
+			}
+		}
+
+		tmpPainter.end();
 
 	}
 }
@@ -536,6 +759,10 @@ void GaugeItem::paint(QPainter *tmpPainter, const QStyleOptionGraphicsItem *styl
 	else if (m_style == 2)
 	{
 		//QPainter tmpPainter(this);
+		tmpPainter->drawImage(0,0,*_bgImage);
+	}
+	else if (m_style == 3)
+	{
 		tmpPainter->drawImage(0,0,*_bgImage);
 	}
 }
