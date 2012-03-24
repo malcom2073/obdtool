@@ -43,7 +43,7 @@ MainWindow::MainWindow() : QMainWindow()
 	//QObject::connect(obdThread,SIGNAL(monitorTestReply(QList<QString>)),this,SLOT(obdMonitorStatus(QList<QString>)));
 	QObject::connect(obdThread,SIGNAL(monitorTestReply(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::MONITOR_COMPLETE_STATUS>)),this,SLOT(obdMonitorStatus(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::MONITOR_COMPLETE_STATUS>)));
 	QObject::connect(obdThread,SIGNAL(onBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>,QList<QString>)),this,SLOT(obdOnBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>,QList<QString>)));
-	QObject::connect(obdThread,SIGNAL(rawCommsLog(QString)),this,SLOT(obdRawCommLog(QString)));
+	QObject::connect(obdThread,SIGNAL(rawCommsMessage(QString)),this,SLOT(obdRawCommLog(QString)));
 
 	obdThread->start();
 //monitorTestReply(QMap<CONTINUOUS_MONITOR,MONITOR_COMPLETE_STATUS> monitorlist)
