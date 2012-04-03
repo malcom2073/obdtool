@@ -1,29 +1,32 @@
 /**************************************************************************
-*   Copyright (C) 2010 by Michael Carpenter (malcom2073)                  *
-*   mcarpenter@interforcesystems.com                                      *
+*   Copyright (C) 2012 by Michael Carpenter (malcom2073)                  *
+*   malcom2073@gmail.com                                                  *
 *                                                                         *
-*   This file is a part of OBDToolbox                                     *
+*   This file is a part of RevFE                                          *
 *                                                                         *
-*   OBDToolbox is free software: you can redistribute it and/or modify    *
-*   it under the terms of the GNU General Public License as published by  *
-*   the Free Software Foundation, either version 3 of the License, or     *
-*   (at your option) any later version.                                   *
+*   RevFE is free software: you can redistribute it and/or modify it      *
+*   under the terms of the GNU Lesser General Public License version 2    *
+*   as published by the Free Software Foundation                          *
 *                                                                         *
-*   OBDToolbox is distributed in the hope that it will be useful,         *
+*                                                                         *
+*   RevFE is distributed in the hope that it will be useful,              *
 *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
 *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
-*   GNU General Public License for more details.                          *
+*   GNU Lesser General Public License for more details.                   *
 *                                                                         *
-*   You should have received a copy of the GNU General Public License     *
-*   along with OBDToolbox.  If not, see <http://www.gnu.org/licenses/>.   *
+*   You should have received a copy of the GNU Lesser General Public      *
+*   License along with RevFE.  If not, see                                *
+*   <http://www.gnu.org/licenses/>.                                       *
 ***************************************************************************/
+
 
 #ifndef GAUGEITEM_H
 #define GAUGEITEM_H
+#include <QPen>
 #include <QDeclarativeItem>
-#include <QPaintEvent>
+//#include <QPaintEvent>
 #include <QPainter>
-#include <QImage>
+//#include <QImage>
 #include <QTimer>
 class GaugeItem : public QDeclarativeItem
 {
@@ -35,6 +38,8 @@ public:
 	Q_PROPERTY(double minimum READ getMinimum WRITE setMinimum);
 	Q_PROPERTY(double maximum READ getMaximum WRITE setMaximum);
 	Q_PROPERTY(double numLabels READ getNumLabels WRITE setNumLabels);
+	Q_PROPERTY(int m_style READ getStyle WRITE setStyle);
+
 	GaugeItem();
 	double getValue() { return m_value; }
 	void setValue(double value);
@@ -47,13 +52,15 @@ public:
 	double getEndAngle() { return _scaleEndAngle;}
 	double smoothing() { return _smoothValue;}
 	double getNumLabels() { return _numLabels;}
+	int getStyle() { return m_style; }
+	void setStyle(int style) { m_style = style; m_redrawBackground = true; }
 	int fade() { return fadeAmount;}
 	void setFadingOn(bool fade);
 	void setMaximum(double max) { _maxValue = max; }
-	void setStartAngle(double ang) { _scaleStartAngle = ang; }
-	void setEndAngle(double ang) { _scaleEndAngle = ang; }
+	void setStartAngle(double ang) { _scaleStartAngle = ang; m_redrawBackground = true;}
+	void setEndAngle(double ang) { _scaleEndAngle = ang; m_redrawBackground = true; }
 	void setSmoothing(double smooth) { _smoothValue = smooth; }
-	void setNumLabels(int num) { _numLabels = num; }
+	void setNumLabels(int num) { _numLabels = num; m_redrawBackground = true;}
 	void setColor(QColor outlinecolor, QColor centercolor, QColor topreflectioncolor, QColor bottomreflectioncolor);
 	void setColor1(QColor needlecolor, QColor needleoutlinecolor, QColor normaltickcolor, QColor bigtickcolor, QColor warningtickcolor, QColor dangertickcolor);
 	void setColor2(QColor fontcolor, QColor warningfontcolor, QColor dangerfontcolor,QFont font);

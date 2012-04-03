@@ -1,21 +1,22 @@
 /**************************************************************************
-*   Copyright (C) 2010 by Michael Carpenter (malcom2073)                  *
-*   mcarpenter@interforcesystems.com                                      *
+*   Copyright (C) 2012 by Michael Carpenter (malcom2073)                  *
+*   malcom2073@gmail.com                                                  *
 *                                                                         *
-*   This file is a part of OBDToolbox                                     *
+*   This file is a part of RevFE                                          *
 *                                                                         *
-*   OBDToolbox is free software: you can redistribute it and/or modify    *
-*   it under the terms of the GNU General Public License as published by  *
-*   the Free Software Foundation, either version 3 of the License, or     *
-*   (at your option) any later version.                                   *
+*   RevFE is free software: you can redistribute it and/or modify it      *
+*   under the terms of the GNU Lesser General Public License version 2    *
+*   as published by the Free Software Foundation                          *
 *                                                                         *
-*   OBDToolbox is distributed in the hope that it will be useful,         *
+*                                                                         *
+*   RevFE is distributed in the hope that it will be useful,              *
 *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
 *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
-*   GNU General Public License for more details.                          *
+*   GNU Lesser General Public License for more details.                   *
 *                                                                         *
-*   You should have received a copy of the GNU General Public License     *
-*   along with OBDToolbox.  If not, see <http://www.gnu.org/licenses/>.   *
+*   You should have received a copy of the GNU Lesser General Public      *
+*   License along with RevFE.  If not, see                                *
+*   <http://www.gnu.org/licenses/>.                                       *
 ***************************************************************************/
 #include "gaugeitem.h"
 #define M_PI 3.1415926535897932384626433832795
@@ -97,7 +98,6 @@ void GaugeItem::geometryChanged (const QRectF &newgeometry,const QRectF &oldgeom
 }
 void GaugeItem::drawBackground(QPainter *painter)
 {
-
 	if (m_style == 1)
 	{
 		//double ellipseA = 100;
@@ -473,7 +473,7 @@ void GaugeItem::drawBackground(QPainter *painter)
 			//qDebug() << 255 * ((float)(internalWidth - i) / (internalWidth - (width() - ((width() - internalWidth)/2))));
 			//tmpPainter.drawEllipse(widthOffset+(internalWidth - i),heightOffset+(internalWidth - i),i-(internalWidth-i),i - (internalWidth-i));
 			//qDebug() << _scaleStartAngle << _scaleEndAngle;
-			tmpPainter.drawArc(widthOffset+(internalWidth - i),heightOffset+(internalWidth - i),i-(internalWidth-i),i - (internalWidth-i),(_scaleStartAngle + 270) * 16,(_scaleEndAngle - _scaleStartAngle) * 16);
+			tmpPainter.drawArc(widthOffset+(internalWidth - i),heightOffset+(internalWidth - i),i-(internalWidth-i),i - (internalWidth-i),(270-_scaleStartAngle) * 16,(0-(_scaleEndAngle - _scaleStartAngle)) * 16);
 		}
 		//double ellipseA = 100;
 		//double ellipseB = 75;
@@ -764,6 +764,34 @@ void GaugeItem::paint(QPainter *tmpPainter, const QStyleOptionGraphicsItem *styl
 	else if (m_style == 3)
 	{
 		tmpPainter->drawImage(0,0,*_bgImage);
+		double _valueInRadi = (((_value * ((_scaleEndAngle - _scaleStartAngle)/(_maxValue-_minValue))) + 90 + _scaleStartAngle) * (M_PI / 180.0));
+		double x=0;
+		double y=0;
+		if (_reverseOrder)
+		{
+			x = (float)(0 + (((this->width() / 2) - 31) *      cos(0 - (float)_valueInRadi + (180 * M_PI / 180)) *      cos((float)0)) - (((this->width() / 2) - 31) *      sin(0 - (float)_valueInRadi + (180 * M_PI / 180)) *      sin((float)0)));
+		  //x = (float)(0 + (((this.Width    / 2) - 31) * Math.Cos(0 - _valueInRadi) * Math.Cos(0)) - (((this.Width    / 2) - 31) * Math.Sin(0 - _valueInRadi) * Math.Sin(0));
+			y = (float)(0 + (((this->height() / 2) - 31) *      sin(((float)0) - _valueInRadi + (180 * M_PI / 180)) *      cos((float)0)) + (((this->height() / 2) - 31) *      cos(((float)0) - _valueInRadi + (180 * M_PI / 180)) *      sin((float)0)));
+		  //y = (float)(0 + (((this.Height    / 2) - 31) * Math.Sin((0) - _valueInRadi) * Math.Cos(0)) + (((this.Height    / 2) - 31) * Math.Cos((0) - _valueInRadi) * Math.Sin(0)));
+		}
+		else
+		{
+			x = (float)(0 + (((this->width() / 2) - 31) * cos(_valueInRadi)) - (((this->width() / 2) - 31) * sin(_valueInRadi) * sin(0 * M_PI / 180)));
+			y = (float)(0 + (((this->height() / 2) - 31) * sin(_valueInRadi)) + (((this->height() / 2) - 31) * cos(_valueInRadi) * sin(0 * M_PI / 180)));
+		}
+		tmpPainter->setPen(needleCenterOutlinePen);
+		tmpPainter->setBrush(QBrush(QColor(100,100,100)));
+		tmpPainter->drawEllipse((this->width() / 2)-(this->width() / 10),(this->height() / 2) - (this->height() / 10),this->width() / 5,this->height() / 5);
+
+		tmpPainter->setPen(needleOutlinePen);
+		tmpPainter->drawLine(this->width()/2,this->height()/2,this->width()/2 + x,this->height()/2 + y);
+		tmpPainter->setPen(needlePen);
+		tmpPainter->drawLine(this->width()/2,this->height()/2,this->width()/2 + x,this->height()/2 + y);
+
+		tmpPainter->setPen(needleCenterPen);
+		tmpPainter->setBrush(QBrush(Qt::SolidPattern));
+		tmpPainter->drawEllipse((this->width() / 2)-(this->width() / 16),(this->height() / 2) - (this->height() / 16),this->width() / 8,this->height() / 8);
+
 	}
 }
 void GaugeItem::setValue(double value)
