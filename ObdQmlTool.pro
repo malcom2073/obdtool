@@ -44,5 +44,5 @@ OTHER_FILES += \
 FORMS += \
     mainwindow.ui \
     settingswidget.ui
-RESOURCES += resources.qrc \
-    resources.qrc
+#RESOURCES += resources.qrc \
+#   resources.qrc

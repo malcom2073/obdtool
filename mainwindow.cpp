@@ -15,7 +15,7 @@ MainWindow::MainWindow() : QMainWindow()
 	connect(ui.actionConnect,SIGNAL(triggered()),this,SLOT(menu_actionConnectClicked()));
 	connect(ui.readReadinessPushButton,SIGNAL(clicked()),this,SLOT(uiReadReadinessButtonClicked()));
 	connect(ui.rawConsoleLineEdit,SIGNAL(returnPressed()),this,SLOT(rawConsoleReturnPressed()));
-	connect(ui.connectPushButton,SIGNAL(clicked()),this,SLOT(connectButtonClicked()));
+	//connect(ui.connectPushButton,SIGNAL(clicked()),this,SLOT(connectButtonClicked()));
 	connect(ui.pidSelectNonePushButton,SIGNAL(clicked()),this,SLOT(uiPidSelectClearClicked()));
 	connect(ui.pidSelectSavePushButton,SIGNAL(clicked()),this,SLOT(uiPidSelectSaveClicked()));
 	connect(ui.connectPushButton,SIGNAL(clicked()),this,SLOT(menu_actionConnectClicked()));
@@ -24,6 +24,8 @@ MainWindow::MainWindow() : QMainWindow()
 	connect(ui.monitorPushButton,SIGNAL(clicked()),this,SLOT(uiMonitorButtonClicked()));
 	connect(ui.troubleReadPushButton,SIGNAL(clicked()),this,SLOT(uiTroubleReadClicked()));
 	connect(ui.troubleClearPushButton,SIGNAL(clicked()),this,SLOT(uiTroubleClearClicked()));
+	connect(ui.graphScrollCheckBox,SIGNAL(stateChanged(int)),this,SLOT(graphScrollButtonStateChanged(int)));
+	connect(ui.graphZoomCheckBox,SIGNAL(stateChanged(int)),this,SLOT(graphZoomButtonStateChanged(int)));
 
 
 	//OBDThread setup and signal connections.
@@ -83,6 +85,7 @@ MainWindow::MainWindow() : QMainWindow()
 	ui.connectionInfoTableWidget->setItem(14,0,new QTableWidgetItem("Service $08 - In Use Performance Tracking"));
 	ui.connectionInfoTableWidget->setItem(15,0,new QTableWidgetItem("Service $09 - Vehicle Information"));
 
+
 	//Create a bunch of new items in the table, so we can just setText later, rather than having to allocate new items
 	//This table never changes size so this is acceptable.
 	for (int i=0;i<16;i++)
@@ -123,7 +126,7 @@ MainWindow::MainWindow() : QMainWindow()
 	qmlRegisterType<GaugeItem>("GaugeImage",0,1,"GaugeImage");
 	gaugeView->rootContext()->setContextProperty("propertyMap",&propertyMap);
 	gaugeView->setGeometry(0,0,this->width()-5,this->height()-(ui.statusbar->height()+30));
-	gaugeView->setSource(QUrl("qrc:/gaugeview.qml"));
+	gaugeView->setSource(QUrl("gaugeview.qml"));
 	gaugeView->show();
 
 	//gaugeView->engine()->setProperty("propertyMap",propertyMap);
@@ -157,8 +160,8 @@ MainWindow::MainWindow() : QMainWindow()
 	graph->setMin(0,0);
 	graph->addGraph("Speed");
 	graph->setMax(1,255);
-	m_graphPidMap["010D"] = 0;
-	m_graphPidMap["010C"] = 1;
+	m_graphPidMap["010D"] = 1;
+	m_graphPidMap["010C"] = 0;
 	graph->show();
 
 
@@ -220,12 +223,14 @@ MainWindow::MainWindow() : QMainWindow()
 	ui.monitorStatusTableWidget->setColumnWidth(1,75);
 
 	m_permConnect = false;
-	//ui.readinessTab->setVisible(false);
-	//ui.readinessTab->hide();
-	//ui.vehiclePidTab->hide();
-	//ui.troubleCodesTab->hide();
-	//ui.onBoardMonitoringTab->hide();
-	//ui.tabWidget->hide();
+
+
+	/*ui.readinessTab->setEnabled(false);
+	ui.onBoardMonitoringTab->setEnabled(false);
+	ui.troubleCodesTab->setEnabled(false);
+	ui.graphsTab->setEnabled(false);*/
+
+
 	if (m_demoMode)
 	{
 	ui.tabWidget->removeTab(2);
@@ -248,6 +253,30 @@ MainWindow::MainWindow() : QMainWindow()
 	m_demoPidList.append("011F");
 
 }
+void MainWindow::graphScrollButtonStateChanged(int state)
+{
+	if (state == 0)
+	{
+		graph->setScrollWithData(false);
+	}
+	else if (state == 2)
+	{
+		graph->setScrollWithData(true);
+	}
+}
+
+void MainWindow::graphZoomButtonStateChanged(int state)
+{
+	if (state == 0)
+	{
+		graph->setShowAllData(false);
+	}
+	else if (state == 2)
+	{
+		graph->setShowAllData(true);
+	}
+}
+
 void MainWindow::uiTroubleClearClicked()
 {
 	obdThread->sendClearTroubleCodes();
@@ -607,6 +636,10 @@ void MainWindow::obdPidReceived(QString pid,QString val,int set, double time)
 	if (m_readPidTableMap.contains(pid))
 	{
 		m_readPidTableMap[pid]->setText(val);
+	}
+	if (m_graphPidMap.contains(pid))
+	{
+		graph->addValue(m_graphPidMap[pid],val.toDouble());
 	}
 	m_pidcount++;
 }

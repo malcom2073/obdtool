@@ -61,13 +61,17 @@ void EGraph::paintEvent(QPaintEvent *e)
 					p.moveTo((width()*0.03),(height()*.95) - (((m_values[j][start] - m_min[j]) / (m_max[j] - m_min[j])) * (height() * .9)));
 					for (int i=(int)start;i<=(int)stop;i++)
 					{
+						if (m_values[j].size() > i)
+						{
 						p.lineTo(((i - (int)start) * ((float)(width()*(.94-(labelSize * m_values.size()))) / (float)(stop-start)))+(width()*.03),(height()*.95) - (((m_values[j][i] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9)));
+						}
 					}
 					painter.drawPath(p);
 					painter.drawLine(selectedLine,0,selectedLine,height());
-					float y1 = (height()*.95) - (((m_values[j][stop] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9));
+					float y1 = (height()*.95) - (((m_values[j][((m_values[j].size() > stop) ? stop : m_values[j].size()-1)] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9));
 					painter.drawLine(x1,y1,x1+5,y1);
-					painter.drawText(x1+5,y1-(fontMetrics().height()/2.0),QString::number(m_values[j][stop]));
+					painter.drawText(x1+5,y1-(fontMetrics().height()/2.0),QString::number(m_values[j][((m_values[j].size() > stop) ? stop : m_values[j].size()-1)]));
+					//}
 				}
 				else
 				{
@@ -99,7 +103,10 @@ void EGraph::paintEvent(QPaintEvent *e)
 					p.moveTo(((width()) * 0.03) -1 ,(((height()-1) / m_values.size()) * (j+1)) - ((height() / m_values.size()) * 0.05));
 					for (int i=(int)start;i<(int)stop;i++)
 					{
+						if (m_values[j].size() > i)
+						{
 						p.lineTo(((width() * 0.03)-1) + (i - (int)start) * ((float)(width() * 0.85) / (float)(stop-start)),(((((height()) / m_values.size()) * j) + ((height() / m_values.size()) * 0.05) + (((height()) / m_values.size()) * 0.9))) - (((m_values[j][i] - m_min[j]) / (m_max[j] - m_min[j])) * ((height() / m_values.size()) * 0.9)) - 1);
+						}
 						//p.lineTo((width() * 0.03) + (i - (int)start) * ((float)(width() * 0.85) / (float)(stop-start)),(((height() / m_values.size()) * (j+1)) - ((height() / m_values.size()) * 0.05)) - (((m_values[j][i] - m_min[j]) / (m_max[j] - m_min[j]))) * ((height() / m_values.size()) * 0.9));
 					}
 					float x = (width() * 0.85) + (width() * 0.03); //(width() * 0.03) + ((stop) - (int)start) * ((float)(width() * 0.85) / (float)(stop-start));
@@ -108,7 +115,7 @@ void EGraph::paintEvent(QPaintEvent *e)
 					p.lineTo(x-1,y);
 					painter.drawPath(p);
 					painter.drawLine(selectedLine,0,selectedLine,height());
-					painter.drawText(x+5,y + (fontMetrics().height()/2.5),QString::number(m_values[j][stop-1]));
+					painter.drawText(x+5,y + (fontMetrics().height()/2.5),QString::number(m_values[j][((m_values[j].size() > stop-1) ? stop-1 : m_values[j].size()-1)]));
 					painter.drawText(x+5,(((height()-1) / m_values.size()) * (j+1)),QString::number(m_min[j]));
 					painter.drawText(x+5,((((height()-1) / m_values.size()) * (j+1)) - (((height()-1) / m_values.size()))) + (fontMetrics().height()),QString::number(m_max[j]));
 				}
@@ -179,9 +186,9 @@ void EGraph::addValue(int graph, float val)
 	//{
 	//	m_values.pop_front();
 	//}
-	if ((scrolling) && (stop < 300))
+	if ((scrolling) && (stop < 300) && m_values[0].count() > 0)
 	{
-		stop = m_values[0].count();
+		stop = m_values[0].count()-1;
 	}
 	repaint();
 }
@@ -314,12 +321,20 @@ void EGraph::wheelEvent(QWheelEvent *evt)
 		}
 	}
 	start += tmpstart;
+	if (start < 0)
+	{
+		start = 0;
+	}
 	stop -= tmpend;
 	GraphResized(start,stop);
 	repaint();
 }
 void EGraph::ResizeGraph(float pstart, float pstop)
 {
+	if (pstart<0)
+	{
+		pstart = 0;
+	}
 	start = pstart;
 	stop = pstop;
 	repaint();

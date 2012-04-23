@@ -60,6 +60,8 @@ protected:
 	void resizeEvent(QResizeEvent *evt);
 	void changeEvent(QEvent *evt);
 private slots:
+	void graphScrollButtonStateChanged(int state);
+	void graphZoomButtonStateChanged(int state);
 	void obdRawCommLog(QString msg);
 	void uiTroubleReadClicked();
 	void uiTroubleClearClicked();
