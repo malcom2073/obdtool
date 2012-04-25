@@ -19,8 +19,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1231</width>
-      <height>761</height>
+      <width>1221</width>
+      <height>731</height>
      </rect>
     </property>
     <property name="tabPosition">
@@ -30,7 +30,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="summaryTab">
      <attribute name="title">
@@ -81,142 +81,132 @@
      <attribute name="title">
       <string>Supported Pids</string>
      </attribute>
-     <layout class="QHBoxLayout" name="horizontalLayout_6">
+     <layout class="QVBoxLayout" name="verticalLayout_22">
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0,1">
         <item>
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>PIDs supported by this vehicle</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>Select which PIDs you which to have requested.
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>PIDs supported by this vehicle</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Select which PIDs you which to have requested.
 The more PIDs you select, the slower they will update.</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTableWidget" name="pidSelectTableWidget"/>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_12" stretch="1,1,1,0,8">
-        <item>
-         <spacer name="verticalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pidSelectAllPushButton">
-          <property name="text">
-           <string>Select All</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pidSelectNonePushButton">
-          <property name="text">
-           <string>Select None</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pidSelectSavePushButton">
-          <property name="text">
-           <string>Save</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_4">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="vehiclePidTab">
-     <attribute name="title">
-      <string>Read Vehicle Pids</string>
-     </attribute>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QTableWidget" name="readPidsTableWidget"/>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="readPidsPushButton">
-            <property name="text">
-             <string>Read Pids</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="cancelReadPidsPushButton">
-            <property name="text">
-             <string>Cancel Read</string>
-            </property>
-           </widget>
+           <widget class="QTableWidget" name="pidSelectTableWidget"/>
           </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_12" stretch="1,1,1,0,8">
           <item>
-           <spacer name="horizontalSpacer">
+           <spacer name="verticalSpacer_3">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Vertical</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>20</width>
+              <height>40</height>
              </size>
             </property>
            </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pidSelectAllPushButton">
+            <property name="text">
+             <string>Select All</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pidSelectNonePushButton">
+            <property name="text">
+             <string>Select None</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pidSelectSavePushButton">
+            <property name="text">
+             <string>Save</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QTableWidget" name="readPidsTableWidget"/>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="readPidsPushButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Read Pids</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="cancelReadPidsPushButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Cancel Read</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
@@ -362,6 +352,135 @@ The more PIDs you select, the slower they will update.</string>
        </layout>
       </item>
      </layout>
+    </widget>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>CAN Messaging</string>
+     </attribute>
+     <layout class="QVBoxLayout" name="verticalLayout_21">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_19" stretch="0,1">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="5,6,5">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_17">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_14">
+              <item>
+               <widget class="QPushButton" name="canMonitorStartPushButton">
+                <property name="text">
+                 <string>Start Monitor</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="canMonitorStopPushButton">
+                <property name="text">
+                 <string>Stop Monitor</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_18">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="0,2">
+              <item>
+               <widget class="QLabel" name="label_11">
+                <property name="text">
+                 <string>Protocol</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="canProtocolComboBox"/>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <item>
+               <widget class="QLabel" name="label_8">
+                <property name="text">
+                 <string>Save Log</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="saveLogFileLineEdit"/>
+              </item>
+              <item>
+               <widget class="QPushButton" name="saveLogFileBrowseButton">
+                <property name="text">
+                 <string>Browse</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_20">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_16">
+              <item>
+               <widget class="QLabel" name="label_12">
+                <property name="text">
+                 <string>Load Log</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="loadLogFileLineEdit"/>
+              </item>
+              <item>
+               <widget class="QPushButton" name="loadLogFileBrowseButton">
+                <property name="text">
+                 <string>Browse</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="loadLogPushButton">
+                <property name="text">
+                 <string>Load</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_4">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="canMsgTableWidget"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Datalogging</string>
+     </attribute>
     </widget>
     <widget class="QWidget" name="troubleCodesTab">
      <attribute name="title">
@@ -551,7 +670,7 @@ The more PIDs you select, the slower they will update.</string>
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>780</y>
+      <y>760</y>
       <width>200</width>
       <height>16</height>
      </rect>
@@ -570,7 +689,7 @@ The more PIDs you select, the slower they will update.</string>
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>780</y>
+      <y>770</y>
       <width>200</width>
       <height>13</height>
      </rect>
@@ -589,7 +708,7 @@ The more PIDs you select, the slower they will update.</string>
     <property name="geometry">
      <rect>
       <x>570</x>
-      <y>780</y>
+      <y>770</y>
       <width>175</width>
       <height>13</height>
      </rect>
@@ -622,17 +741,6 @@ The more PIDs you select, the slower they will update.</string>
     <property name="text">
      <string>Pid Rate: 0</string>
     </property>
-   </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>880</x>
-      <y>760</y>
-      <width>160</width>
-      <height>80</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_10"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

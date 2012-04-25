@@ -56,10 +56,12 @@ private:
 	bool m_permConnect;
 	QList<QString> m_demoPidList;
 	bool m_demoMode;
+	int m_canDispStyle;
 protected:
 	void resizeEvent(QResizeEvent *evt);
 	void changeEvent(QEvent *evt);
 private slots:
+
 	void graphScrollButtonStateChanged(int state);
 	void graphZoomButtonStateChanged(int state);
 	void obdRawCommLog(QString msg);
@@ -71,6 +73,7 @@ private slots:
 	void uiPidSelectSaveClicked();
 	void rawConsoleReturnPressed();
 	void uiPidSelectClearClicked();
+	void uiPidSelectAllClicked();
 	void uiReadReadinessButtonClicked();
 	//void obdMonitorStatus(QList<QString> list);
 	void obdMonitorStatus(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::MONITOR_COMPLETE_STATUS> list);
@@ -81,9 +84,13 @@ private slots:
 	void obdError(ObdThread::ObdError err);
         void connectButtonClicked();
 	void menu_actionConnectClicked();
-	void uiPidSelectTableClicked(int row, int column);
-	void obdSupportedPids(QList<QString> pidlist);
 	void menu_settingsClicked();
+
+	void uiPidSelectTableClicked(int row, int column);
+	void uiStartMonitorClicked();
+	void uiStopMonitorClicked();
+	void obdMonitorModeLine(QByteArray line);
+	void obdSupportedPids(QList<QString> pidlist);
 	void settings_saveComPort(QString port,int baud);
 	void obdPidReceived(QString pid,QString val,int set, double time);
 	void obdTroubleCodes(QString ecu,QList<QString> codes);

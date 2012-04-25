@@ -91,6 +91,7 @@ GaugeItem::GaugeItem() : QDeclarativeItem()
 }*/
 void GaugeItem::geometryChanged (const QRectF &newgeometry,const QRectF &oldgeometry)
 {
+	Q_UNUSED(oldgeometry);
 	delete _bgImage;
 	_bgImage = new QImage(newgeometry.width(),newgeometry.height(),QImage::Format_ARGB32);
 	m_redrawBackground = true;
@@ -98,6 +99,7 @@ void GaugeItem::geometryChanged (const QRectF &newgeometry,const QRectF &oldgeom
 }
 void GaugeItem::drawBackground(QPainter *painter)
 {
+	Q_UNUSED(painter)
 	if (m_style == 1)
 	{
 		//double ellipseA = 100;
@@ -675,6 +677,8 @@ void GaugeItem::drawBackground(QPainter *painter)
 void GaugeItem::paint(QPainter *tmpPainter, const QStyleOptionGraphicsItem *style , QWidget * w)
 //void GaugeItem::paintEvent(QPaintEvent *evt)
 {
+	Q_UNUSED(style);
+	Q_UNUSED(w);
 	tmpPainter->setRenderHint(QPainter::Antialiasing);
 	if (m_redrawBackground)
 	{
@@ -796,6 +800,7 @@ void GaugeItem::paint(QPainter *tmpPainter, const QStyleOptionGraphicsItem *styl
 }
 void GaugeItem::setValue(double value)
 {
+	Q_UNUSED(value);
 	//_value = value;
 	//_targetValue = value;
 	//fadeTimer->stop();

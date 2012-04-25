@@ -113,6 +113,8 @@ QmlWindow::~QmlWindow()
 
 void QmlWindow::obdPidReceived(QString pid,QString val,int set, double time)
 {
+	Q_UNUSED(set);
+	Q_UNUSED(time);
 	if (m_pidTimeMap.contains(pid))
 	{
 		double newtime = QDateTime::currentMSecsSinceEpoch() - m_pidTimeMap[pid];
@@ -124,6 +126,7 @@ void QmlWindow::obdPidReceived(QString pid,QString val,int set, double time)
 }
 void QmlWindow::obdConnected(QString protocol)
 {
+	Q_UNUSED(protocol);
 	propertyMap.setProperty("connectedMessage","Connected");
 }
 

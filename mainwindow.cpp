@@ -7,25 +7,47 @@
 MainWindow::MainWindow() : QMainWindow()
 {
 	ui.setupUi(this);
-
+	m_canDispStyle = 2;
 	m_demoMode = false;
 
+	if (m_canDispStyle == 1)
+	{
+		ui.canMsgTableWidget->setRowCount(1);
+	}
+	else if (m_canDispStyle == 2)
+	{
+		ui.canMsgTableWidget->setColumnCount(8);
+		ui.canMsgTableWidget->setHorizontalHeaderItem(0,new QTableWidgetItem("CANID"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(1,new QTableWidgetItem("SOURCE"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(2,new QTableWidgetItem("BYTE 0"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(3,new QTableWidgetItem("BYTE 1"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(4,new QTableWidgetItem("BYTE 2"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(5,new QTableWidgetItem("BYTE 3"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(6,new QTableWidgetItem("BYTE 4"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(7,new QTableWidgetItem("BYTE 5"));
+	}
 	//Setup all the UI signals, connecting them to slots.
 	connect(ui.actionSettings,SIGNAL(triggered()),this,SLOT(menu_settingsClicked()));
 	connect(ui.actionConnect,SIGNAL(triggered()),this,SLOT(menu_actionConnectClicked()));
 	connect(ui.readReadinessPushButton,SIGNAL(clicked()),this,SLOT(uiReadReadinessButtonClicked()));
 	connect(ui.rawConsoleLineEdit,SIGNAL(returnPressed()),this,SLOT(rawConsoleReturnPressed()));
 	//connect(ui.connectPushButton,SIGNAL(clicked()),this,SLOT(connectButtonClicked()));
+
 	connect(ui.pidSelectNonePushButton,SIGNAL(clicked()),this,SLOT(uiPidSelectClearClicked()));
 	connect(ui.pidSelectSavePushButton,SIGNAL(clicked()),this,SLOT(uiPidSelectSaveClicked()));
+	connect(ui.pidSelectAllPushButton,SIGNAL(clicked()),this,SLOT(uiPidSelectAllClicked()));
+
 	connect(ui.connectPushButton,SIGNAL(clicked()),this,SLOT(menu_actionConnectClicked()));
 	connect(ui.disconnectPushButton,SIGNAL(clicked()),this,SLOT(menu_actionDisconnectClicked()));
+
 	connect(ui.action_Exit,SIGNAL(triggered()),this,SLOT(menu_actionExit()));
 	connect(ui.monitorPushButton,SIGNAL(clicked()),this,SLOT(uiMonitorButtonClicked()));
 	connect(ui.troubleReadPushButton,SIGNAL(clicked()),this,SLOT(uiTroubleReadClicked()));
 	connect(ui.troubleClearPushButton,SIGNAL(clicked()),this,SLOT(uiTroubleClearClicked()));
 	connect(ui.graphScrollCheckBox,SIGNAL(stateChanged(int)),this,SLOT(graphScrollButtonStateChanged(int)));
 	connect(ui.graphZoomCheckBox,SIGNAL(stateChanged(int)),this,SLOT(graphZoomButtonStateChanged(int)));
+	connect(ui.canMonitorStartPushButton,SIGNAL(clicked()),this,SLOT(uiStartMonitorClicked()));
+	connect(ui.canMonitorStopPushButton,SIGNAL(clicked()),this,SLOT(uiStopMonitorClicked()));
 
 
 	//OBDThread setup and signal connections.
@@ -46,6 +68,7 @@ MainWindow::MainWindow() : QMainWindow()
 	QObject::connect(obdThread,SIGNAL(monitorTestReply(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::MONITOR_COMPLETE_STATUS>)),this,SLOT(obdMonitorStatus(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::MONITOR_COMPLETE_STATUS>)));
 	QObject::connect(obdThread,SIGNAL(onBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>,QList<QString>)),this,SLOT(obdOnBoardMonitoringReply(QList<unsigned char>,QList<unsigned char>,QList<QString>,QList<QString>,QList<QString>,QList<QString>)));
 	QObject::connect(obdThread,SIGNAL(rawCommsMessage(QString)),this,SLOT(obdRawCommLog(QString)));
+	QObject::connect(obdThread,SIGNAL(monitorModeLine(QByteArray)),this,SLOT(obdMonitorModeLine(QByteArray)));
 
 	obdThread->start();
 //monitorTestReply(QMap<CONTINUOUS_MONITOR,MONITOR_COMPLETE_STATUS> monitorlist)
@@ -84,6 +107,36 @@ MainWindow::MainWindow() : QMainWindow()
 	ui.connectionInfoTableWidget->setItem(13,0,new QTableWidgetItem("Service $06 - On Board Monitoring"));
 	ui.connectionInfoTableWidget->setItem(14,0,new QTableWidgetItem("Service $08 - In Use Performance Tracking"));
 	ui.connectionInfoTableWidget->setItem(15,0,new QTableWidgetItem("Service $09 - Vehicle Information"));
+
+	ui.canProtocolComboBox->addItem("11:J1850 PWM");
+	ui.canProtocolComboBox->addItem("12:J1850 VPW");
+
+	ui.canProtocolComboBox->addItem("21:ISO 9141 (no header no autoinit)");
+	ui.canProtocolComboBox->addItem("22:ISO 9141-2 (5 baud autoinit)");
+	ui.canProtocolComboBox->addItem("23:ISO 14230 (no autoinit)");
+	ui.canProtocolComboBox->addItem("24:ISO 14230 (5 baud autoinit)");
+	ui.canProtocolComboBox->addItem("25:ISO 14230 (fast autoinit)");
+
+	ui.canProtocolComboBox->addItem("31:HS CAN (ISO 11898, 11-bit Tx, 500kbps, var DLC)");
+	ui.canProtocolComboBox->addItem("32:HS CAN (ISO 11898, 29-bit Tx, 500kbps, var DLC)");
+
+	ui.canProtocolComboBox->addItem("33:HS CAN (ISO 15765, 11-bit Tx, 500kbps, DLC=8");
+	ui.canProtocolComboBox->addItem("34:HS CAN (ISO 15765, 29-bit Tx, 500kbps, DLC=8");
+	ui.canProtocolComboBox->addItem("35:HS CAN (ISO 15765, 11-bit Tx, 250kbps, DLC=8");
+	ui.canProtocolComboBox->addItem("36:HS CAN (ISO 15765, 29-bit Tx, 250kbps, DLC=8");
+
+	ui.canProtocolComboBox->addItem("41:J1939 (11-bit Tx)");
+	ui.canProtocolComboBox->addItem("42:J1939 (29-bit Tx)");
+
+	ui.canProtocolComboBox->addItem("51:MS CAN (ISO 11898, 11-bit Tx, 125kbps, var DLC)");
+	ui.canProtocolComboBox->addItem("52:MS CAN (ISO 11898, 29-bit Tx, 125kbps, var DLC)");
+	ui.canProtocolComboBox->addItem("53:MS CAN (ISO 15765, 11-bit Tx, 125kbps, DLC=8)");
+	ui.canProtocolComboBox->addItem("54:MS CAN (ISO 15765, 29-bit Tx, 125kbps, DLC=8)");
+
+	ui.canProtocolComboBox->addItem("61:SW CAN (ISO 11898, 11-bit Tx, 33.3kbps, var DLC)");
+	ui.canProtocolComboBox->addItem("62:SW CAN (ISO 11898, 29-bit Tx, 33.3kbps, var DLC)");
+	ui.canProtocolComboBox->addItem("63:SW CAN (ISO 15765, 11-bit Tx, 33.3kbps, DLC=8)");
+	ui.canProtocolComboBox->addItem("64:SW CAN (ISO 15765, 29-bit Tx, 33.3kbps, DLC=8)");
 
 
 	//Create a bunch of new items in the table, so we can just setText later, rather than having to allocate new items
@@ -264,6 +317,220 @@ void MainWindow::graphScrollButtonStateChanged(int state)
 		graph->setScrollWithData(true);
 	}
 }
+void MainWindow::uiStartMonitorClicked()
+{
+	obdThread->setEcho(false);
+	obdThread->setLineFeed(false);
+	obdThread->MX_setProtocol(ui.canProtocolComboBox->currentText().split(":")[0].toInt());
+	obdThread->startMonitorMode();
+}
+
+void MainWindow::uiStopMonitorClicked()
+{
+	obdThread->stopMonitorMode();
+}
+
+void MainWindow::obdMonitorModeLine(QByteArray buf)
+{
+	/*if (logFile)
+	{
+	logFile->write(buf);
+	}*/
+	/*if (!m_display)
+	{
+		return;
+	}*/
+	/*buf.clear();
+	buf.append("10");
+	buf.append("0A");
+	buf.append("C0");
+	buf.append("97");
+	buf.append("45");*/
+	QString strbuf = buf;
+	QString msg = buf.replace(" ","").replace("\r","").replace("\n","");
+	qDebug() << msg;
+	QByteArray bytes;
+	QString comp = "";
+	QString newmsg = "";
+	bool is11bit = false;
+	int sourceid = 0;
+	if (strbuf.split(" ")[0].size() == 2)
+	{
+		qDebug() << "29bit";
+		for (int i=0;i<buf.size()-1;i+=2)
+		{
+			if (buf[i] != (char)32 && buf[i] != '\r' && buf[i] != '\n')
+			{
+				bytes.append(obdLib::byteArrayToByte(buf[i],buf[i+1]));
+			}
+		}
+		//int priority = ((bytes[0] >> 2) & 0x7);
+		int paramA = ((bytes[1] >> 1) & 0xF);
+		int paramB = (((bytes[1]) & 0x1) << 3) + ((bytes[2] >> 5) & 0x7);
+		int paramid = (paramA << 4) + paramB;
+		sourceid = (unsigned char)bytes[3];
+		comp = ((paramid <= 0x0F) ? "0" : "") + QString::number(paramid);
+		newmsg += ((sourceid <= 0x0F) ? "0" : "") + QString::number(sourceid,16).toUpper() + ":";
+		for (int i=4;i<bytes.size();i++)
+		{
+			newmsg += (((unsigned char)bytes[i] <=0xF) ? "0" : "") + QString::number((unsigned char)bytes[i],16).toUpper();
+		}
+	}
+	else if (strbuf.split(" ")[0].size() == 3)
+	{
+		is11bit = true;
+		qDebug() << "11bit";
+		for (int i=3;i<buf.size()-1;i+=2)
+		{
+			if (buf[i] != (char)32 && buf[i] != '\r' && buf[i] != '\n')
+			{
+				bytes.append(obdLib::byteArrayToByte(buf[i],buf[i+1]));
+			}
+		}
+		unsigned char second = obdLib::byteArrayToByte(buf[1],buf[2]);
+		unsigned char first = obdLib::byteArrayToByte('0',buf[0]);
+		unsigned int final = (first << 8) + second;
+		qDebug() << "Header:" << QString::number(final,16);
+		comp = strbuf.mid(0,strbuf.indexOf(" "));
+		for (int i=0;i<bytes.size();i++)
+		{
+			newmsg += (((unsigned char)bytes[i] <=0xF) ? "0" : "") + QString::number((unsigned char)bytes[i],16).toUpper();
+		}
+	}
+	else
+	{
+		qDebug() << "WEEEE";
+	}
+	if (bytes.length() <= 3)
+	{
+		return;
+	}
+
+
+	qDebug() << "Compare:" << comp;
+	//Style 1
+
+
+	if (m_canDispStyle == 2)
+	{
+		newmsg = newmsg.mid(3);
+/*ui.canMsgTableWidget->setHorizontalHeaderItem(0,new QTableWidgetItem("CANID"));
+  ui.canMsgTableWidget->setHorizontalHeaderItem(1,new QTableWidgetItem("SOURCE"));
+  ui.canMsgTableWidget->setHorizontalHeaderItem(2,new QTableWidgetItem("BYTE 0"));
+  ui.canMsgTableWidget->setHorizontalHeaderItem(3,new QTableWidgetItem("BYTE 1"));
+  ui.canMsgTableWidget->setHorizontalHeaderItem(4,new QTableWidgetItem("BYTE 2"));
+  ui.canMsgTableWidget->setHorizontalHeaderItem(5,new QTableWidgetItem("BYTE 3"));
+  ui.canMsgTableWidget->setHorizontalHeaderItem(6,new QTableWidgetItem("BYTE 4"));
+  ui.canMsgTableWidget->setHorizontalHeaderItem(7,new QTableWidgetItem("BYTE 5"));*/
+		int foundi = 0;
+		bool found = false;
+		for (int i=0;i<ui.canMsgTableWidget->rowCount();i++)
+		{
+			if (ui.canMsgTableWidget->item(i,0)->text() == comp)
+			{
+				found = true;
+				foundi = i;
+				break;
+			}
+		}
+		if (!found)
+		{
+			ui.canMsgTableWidget->setRowCount(ui.canMsgTableWidget->rowCount()+1);
+			ui.canMsgTableWidget->setItem(ui.canMsgTableWidget->rowCount()-1,0,new QTableWidgetItem(comp));
+			if (!is11bit)
+			{
+				QString sourceidstr = (((unsigned char)sourceid <=0xF) ? "0" : "") + QString::number((unsigned char)sourceid,16).toUpper();
+				ui.canMsgTableWidget->setItem(ui.canMsgTableWidget->rowCount()-1,1,new QTableWidgetItem(sourceidstr));
+			}
+			for (int i=0;i<10;i+=2)
+			{
+				if (i < newmsg.size())
+				{
+					ui.canMsgTableWidget->setItem(ui.canMsgTableWidget->rowCount()-1,2+(i/2),new QTableWidgetItem(newmsg.mid(i,2)));
+				}
+				else
+				{
+					ui.canMsgTableWidget->setItem(ui.canMsgTableWidget->rowCount()-1,2+(i/2),new QTableWidgetItem(""));
+				}
+			}
+		}
+		else
+		{
+			for (int i=0;i<10;i+=2)
+			{
+				if (i < newmsg.size())
+				{
+				if (ui.canMsgTableWidget->item(foundi,2+(i/2))->text() == newmsg.mid(i,2))
+				{
+				}
+				else
+				{
+					ui.canMsgTableWidget->setItem(foundi,2+(i/2),new QTableWidgetItem(newmsg.mid(i,2)));
+					ui.canMsgTableWidget->item(foundi,2+(i/2))->setBackgroundColor(QColor::fromRgb(255,0,0));
+				}
+			}
+			}
+		}
+	}
+	else if (m_canDispStyle == 1)
+	{
+		bool found = false;
+		int foundi = -1;
+		for (int i=0;i<ui.canMsgTableWidget->columnCount();i++)
+		{
+			if (ui.canMsgTableWidget->horizontalHeaderItem(i)->text() == comp)
+			{
+				found = true;
+				foundi = i;
+				break;
+			}
+
+		}
+		if (!found)
+		{
+			ui.canMsgTableWidget->setColumnCount(ui.canMsgTableWidget->columnCount()+1);
+			ui.canMsgTableWidget->setColumnWidth(ui.canMsgTableWidget->columnCount()-1,150);
+			ui.canMsgTableWidget->setHorizontalHeaderItem(ui.canMsgTableWidget->columnCount()-1,new QTableWidgetItem(comp));
+			foundi = ui.canMsgTableWidget->columnCount()-1;
+			qDebug() << "New Column:" << comp;
+		}
+		found = false;
+		if (!ui.canMsgTableWidget->item(ui.canMsgTableWidget->rowCount()-1,foundi))
+		{
+			if (newmsg.length() > 0)
+			{
+				ui.canMsgTableWidget->setItem(ui.canMsgTableWidget->rowCount()-1,foundi,new QTableWidgetItem(newmsg));
+			}
+		}
+		else
+		{
+			if (newmsg.length() > 0)
+			{
+				ui.canMsgTableWidget->setRowCount(ui.canMsgTableWidget->rowCount()+1);
+				ui.canMsgTableWidget->setItem(ui.canMsgTableWidget->rowCount()-1,foundi,new QTableWidgetItem(newmsg));
+			}
+		}
+	}
+	/*for (int i=0;i<ui.tableWidget->rowCount();i++)
+	{
+		if (!ui.tableWidget->item(i,foundi))
+		{
+			if (newmsg.length() > 0)
+			{
+				ui.tableWidget->setItem(i,foundi,new QTableWidgetItem(newmsg));
+				found = true;
+			}
+		}
+	}
+	if (!found)
+	{
+		if (newmsg > 0)
+		{
+			ui.tableWidget->setRowCount(ui.tableWidget->rowCount()+1);
+			ui.tableWidget->setItem(ui.tableWidget->rowCount()-1,foundi,new QTableWidgetItem(newmsg));
+		}
+	}*/
+}
 
 void MainWindow::graphZoomButtonStateChanged(int state)
 {
@@ -323,6 +590,7 @@ void MainWindow::connectButtonClicked()
 
 void MainWindow::changeEvent(QEvent *evt)
 {
+	Q_UNUSED(evt)
 	/*ui.tabWidget->setGeometry(0,0,this->width(),this->height()-(ui.statusbar->height()+20));
 	ui.connectionInfoTableWidget->setGeometry(0,0,this->width()-5,this->height()-(ui.statusbar->height()+70));
 	ui.pidSelectTableWidget->setGeometry(0,0,this->width()-5,this->height()-(ui.statusbar->height()+45));
@@ -426,6 +694,7 @@ void MainWindow::addReadPidRow(QString pid,int priority)
 }
 void MainWindow::resizeEvent(QResizeEvent *evt)
 {
+	Q_UNUSED(evt)
 	ui.tabWidget->setGeometry(0,0,this->width(),this->height()-(ui.statusbar->height()+20));
 }
 
@@ -489,6 +758,8 @@ void MainWindow::obdSupportedModes(QList<QString> list)
 
 void MainWindow::uiPidSelectTableClicked(int row, int column)
 {
+	Q_UNUSED(row);
+	Q_UNUSED(column);
 	for (int i=0;i<ui.pidSelectTableWidget->rowCount();i++)
 	{
 		if (ui.pidSelectTableWidget->item(i,0)->checkState() == Qt::Checked)
@@ -607,7 +878,16 @@ void MainWindow::uiPidSelectClearClicked()
 		}
 	}
 }
-
+void MainWindow::uiPidSelectAllClicked()
+{
+	for (int i=0;i<ui.pidSelectTableWidget->rowCount();i++)
+	{
+		if (ui.pidSelectTableWidget->item(i,0))
+		{
+			ui.pidSelectTableWidget->item(i,0)->setCheckState(Qt::Checked);
+		}
+	}
+}
 void MainWindow::uiPidSelectSaveClicked()
 {
 	clearReadPidsTable();
@@ -622,6 +902,8 @@ void MainWindow::uiPidSelectSaveClicked()
 
 void MainWindow::obdPidReceived(QString pid,QString val,int set, double time)
 {
+	Q_UNUSED(set);
+	Q_UNUSED(time);
 	//qDebug() << pid << val;
 	propertyMap.setProperty(pid.toAscii(),val);
 	//0105_DURATION
