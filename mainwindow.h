@@ -10,6 +10,7 @@
 #include <QDeclarativeView>
 #include <QDeclarativePropertyMap>
 #include <QTimer>
+#include <QFile>
 #include "gaugewidget.h"
 #include "egraph.h"
 #include "settingswidget.h"
@@ -57,6 +58,8 @@ private:
 	QList<QString> m_demoPidList;
 	bool m_demoMode;
 	int m_canDispStyle;
+	QFile *m_canLogFile;
+	int m_canMsgCount;
 protected:
 	void resizeEvent(QResizeEvent *evt);
 	void changeEvent(QEvent *evt);
@@ -72,6 +75,7 @@ private slots:
 	void uiMonitorButtonClicked();
 	void uiPidSelectSaveClicked();
 	void rawConsoleReturnPressed();
+	void uiCanSaveLogFileBrowseClicked();
 	void uiPidSelectClearClicked();
 	void uiPidSelectAllClicked();
 	void uiReadReadinessButtonClicked();
@@ -101,5 +105,6 @@ private slots:
 	void obdSingleShotReply(QByteArray req,QByteArray reply);
 	void obdOnBoardMonitoringReply(QList<unsigned char> midlist,QList<unsigned char> tidlist,QList<QString> vallist,QList<QString> minlist,QList<QString> maxlist,QList<QString> passlist);
 
+	void on_canClearRedPushButton_clicked();
 };
 #endif //MAINWINDOW_H

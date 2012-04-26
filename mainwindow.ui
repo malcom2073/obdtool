@@ -30,7 +30,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>6</number>
     </property>
     <widget class="QWidget" name="summaryTab">
      <attribute name="title">
@@ -361,9 +361,9 @@ The more PIDs you select, the slower they will update.</string>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_19" stretch="0,1">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="5,6,5">
+         <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="0,6,5">
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_17">
+           <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_14">
               <item>
@@ -381,6 +381,13 @@ The more PIDs you select, the slower they will update.</string>
                </widget>
               </item>
              </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="canMsgLabel">
+              <property name="text">
+               <string>Messages: 0</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -410,10 +417,10 @@ The more PIDs you select, the slower they will update.</string>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="saveLogFileLineEdit"/>
+               <widget class="QLineEdit" name="canSaveLogFileLineEdit"/>
               </item>
               <item>
-               <widget class="QPushButton" name="saveLogFileBrowseButton">
+               <widget class="QPushButton" name="canSaveLogFileBrowseButton">
                 <property name="text">
                  <string>Browse</string>
                 </property>
@@ -435,17 +442,17 @@ The more PIDs you select, the slower they will update.</string>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="loadLogFileLineEdit"/>
+               <widget class="QLineEdit" name="canLoadLogFileLineEdit"/>
               </item>
               <item>
-               <widget class="QPushButton" name="loadLogFileBrowseButton">
+               <widget class="QPushButton" name="canLoadLogFileBrowseButton">
                 <property name="text">
                  <string>Browse</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="loadLogPushButton">
+               <widget class="QPushButton" name="canLoadLogPushButton">
                 <property name="text">
                  <string>Load</string>
                 </property>
@@ -461,10 +468,17 @@ The more PIDs you select, the slower they will update.</string>
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>40</height>
+                <height>5</height>
                </size>
               </property>
              </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="canClearRedPushButton">
+              <property name="text">
+               <string>Clear Change Color</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>

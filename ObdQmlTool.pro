@@ -26,6 +26,7 @@ win32:LIBS += c:\libs\libobd\lib\obd.lib
 #win32:LIBS += c:\libs\libobd\lib\obd.lib
 #}
 # Input
+LIBS += -lqjson
 HEADERS += mainwindow.h qmlwindow.h gaugeitem.h \
     settingswidget.h \
     gaugewidget.h \

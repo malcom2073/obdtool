@@ -3,7 +3,8 @@
 #include <QDeclarativeItem>
 #include "gaugeitem.h"
 #include <QDeclarativeContext>
-
+#include <QFileDialog>
+#include <qjson/serializer.h>
 MainWindow::MainWindow() : QMainWindow()
 {
 	ui.setupUi(this);
@@ -32,6 +33,7 @@ MainWindow::MainWindow() : QMainWindow()
 	connect(ui.readReadinessPushButton,SIGNAL(clicked()),this,SLOT(uiReadReadinessButtonClicked()));
 	connect(ui.rawConsoleLineEdit,SIGNAL(returnPressed()),this,SLOT(rawConsoleReturnPressed()));
 	//connect(ui.connectPushButton,SIGNAL(clicked()),this,SLOT(connectButtonClicked()));
+	connect(ui.canSaveLogFileBrowseButton,SIGNAL(clicked()),this,SLOT(uiCanSaveLogFileBrowseClicked()));
 
 	connect(ui.pidSelectNonePushButton,SIGNAL(clicked()),this,SLOT(uiPidSelectClearClicked()));
 	connect(ui.pidSelectSavePushButton,SIGNAL(clicked()),this,SLOT(uiPidSelectSaveClicked()));
@@ -319,6 +321,17 @@ void MainWindow::graphScrollButtonStateChanged(int state)
 }
 void MainWindow::uiStartMonitorClicked()
 {
+	m_canMsgCount = 0;
+	QString file = ui.canSaveLogFileLineEdit->text();
+	if (file != "")
+	{
+		m_canLogFile = new QFile(file);
+		m_canLogFile->open(QIODevice::ReadWrite | QIODevice::Append);
+	}
+	else
+	{
+		m_canLogFile = 0;
+	}
 	obdThread->setEcho(false);
 	obdThread->setLineFeed(false);
 	obdThread->MX_setProtocol(ui.canProtocolComboBox->currentText().split(":")[0].toInt());
@@ -329,13 +342,32 @@ void MainWindow::uiStopMonitorClicked()
 {
 	obdThread->stopMonitorMode();
 }
+void MainWindow::uiCanSaveLogFileBrowseClicked()
+{
+	QFileDialog dialog;
+	if (dialog.exec())
+	{
+		if (dialog.selectedFiles().size() > 0)
+		{
+			ui.canLoadLogFileLineEdit->setText(dialog.selectedFiles()[0]);
+		}
+	}
+}
 
 void MainWindow::obdMonitorModeLine(QByteArray buf)
 {
-	/*if (logFile)
+	m_canMsgCount++;
+	ui.canMsgLabel->setText("Messages: " + QString::number(m_canMsgCount));
+	QJson::Serializer ser;
+	if (m_canLogFile)
 	{
-	logFile->write(buf);
-	}*/
+		QVariantMap map;
+		map["data"] = buf;
+		map["direction"] = "in";
+		map["mode"] = "11";
+		map["time"] = QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch() / 1000.0,'f');
+		m_canLogFile->write(ser.serialize(map).append("\n"));
+	}
 	/*if (!m_display)
 	{
 		return;
@@ -369,8 +401,8 @@ void MainWindow::obdMonitorModeLine(QByteArray buf)
 		int paramB = (((bytes[1]) & 0x1) << 3) + ((bytes[2] >> 5) & 0x7);
 		int paramid = (paramA << 4) + paramB;
 		sourceid = (unsigned char)bytes[3];
-		comp = ((paramid <= 0x0F) ? "0" : "") + QString::number(paramid);
-		newmsg += ((sourceid <= 0x0F) ? "0" : "") + QString::number(sourceid,16).toUpper() + ":";
+		comp = ((sourceid <= 0x0F) ? "0" : "") + QString::number(sourceid,16).toUpper() + ":" + ((paramid <= 0x0F) ? "0" : "") + QString::number(paramid);
+		//newmsg += ((sourceid <= 0x0F) ? "0" : "") + QString::number(sourceid,16).toUpper() + ":";
 		for (int i=4;i<bytes.size();i++)
 		{
 			newmsg += (((unsigned char)bytes[i] <=0xF) ? "0" : "") + QString::number((unsigned char)bytes[i],16).toUpper();
@@ -988,5 +1020,19 @@ void MainWindow::obdError(ObdThread::ObdError err)
 	if (err == ObdThread::UNABLE_TO_OPEN_COM_PORT)
 	{
 		ui.status_comStatusLabel->setText("Status: Unable to open Com Port");
+	}
+}
+
+void MainWindow::on_canClearRedPushButton_clicked()
+{
+	for (int i=0;i<ui.canMsgTableWidget->rowCount();i++)
+	{
+		for (int j=0;j<ui.canMsgTableWidget->columnCount();j++)
+		{
+			if (ui.canMsgTableWidget->item(i,j))
+			{
+				ui.canMsgTableWidget->item(i,j)->setBackgroundColor(QColor::fromRgb(255,255,255));
+			}
+		}
 	}
 }
