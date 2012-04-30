@@ -59,11 +59,18 @@ void EGraph::paintEvent(QPaintEvent *e)
 					QPainterPath p;
 					//p.moveTo(width()*0.03,(height() * 0.9));
 					p.moveTo((width()*0.03),(height()*.95) - (((m_values[j][start] - m_min[j]) / (m_max[j] - m_min[j])) * (height() * .9)));
-					for (int i=(int)start;i<=(int)stop;i++)
+					for (int i=(int)start;i<=(int)stop;i+=2)
 					{
-						if (m_values[j].size() > i)
+						if (m_values[j].size() > i+1)
 						{
-						p.lineTo(((i - (int)start) * ((float)(width()*(.94-(labelSize * m_values.size()))) / (float)(stop-start)))+(width()*.03),(height()*.95) - (((m_values[j][i] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9)));
+							///TODO: Curve paths using quadTo or cubicTwo to smooth the graph
+							p.lineTo(((i - (int)start) * ((float)(width()*(.94-(labelSize * m_values.size()))) / (float)(stop-start)))+(width()*.03),(height()*.95) - (((m_values[j][i] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9)));
+							//float mx = ((i - (int)start) * ((float)(width()*(.94-(labelSize * m_values.size()))) / (float)(stop-start)))+(width()*.03);
+							//float my = (height()*.95) - (((m_values[j][i] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9));
+							//float sx = ((i+1 - (int)start) * ((float)(width()*(.94-(labelSize * m_values.size()))) / (float)(stop-start)))+(width()*.03);
+							//float sy = (height()*.95) - (((m_values[j][i+1] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9));
+							//p.lineTo(sx,sy);
+							//p.quadTo(mx,my,sx,sy);
 						}
 					}
 					painter.drawPath(p);
@@ -71,7 +78,6 @@ void EGraph::paintEvent(QPaintEvent *e)
 					float y1 = (height()*.95) - (((m_values[j][((m_values[j].size() > stop) ? stop : m_values[j].size()-1)] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9));
 					painter.drawLine(x1,y1,x1+5,y1);
 					painter.drawText(x1+5,y1-(fontMetrics().height()/2.0),QString::number(m_values[j][((m_values[j].size() > stop) ? stop : m_values[j].size()-1)]));
-					//}
 				}
 				else
 				{

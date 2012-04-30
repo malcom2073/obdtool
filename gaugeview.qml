@@ -18,6 +18,7 @@ Rectangle {
 		numLabels:3
 		startAngle:45
 		endAngle:270
+		text: "Temp"
 		Behavior on m_value {  PropertyAnimation { properties: "m_value"; duration: (propertyMap["0105_DURATION"] ? propertyMap["0105_DURATION"] : 500) } }
 		m_value: (propertyMap["0105"] ? propertyMap["0105"] : 0)
 
@@ -33,6 +34,7 @@ Rectangle {
 		numLabels:3
 		startAngle:90
 		endAngle:270
+		text: "MAF"
 		Behavior on m_value {  PropertyAnimation { properties: "m_value"; duration: (propertyMap["0110_DURATION"] ? propertyMap["0110_DURATION"] : 500) } }
                 m_value: (propertyMap["0110"] ? propertyMap["0110"] : 0) * 10
 
@@ -48,6 +50,7 @@ Rectangle {
 		numLabels: 7
 		startAngle: 45
 		endAngle: 315
+		text:"RPM"
 		Behavior on m_value {  PropertyAnimation { properties: "m_value"; duration: (propertyMap["010C_DURATION"] ? propertyMap["010C_DURATION"] : 500) } }
 		m_value: (propertyMap["010C"] ? propertyMap["010C"] : 0)
 	}
@@ -61,6 +64,7 @@ Rectangle {
 		numLabels: 7
 		startAngle: 45
 		endAngle: 315
+		text:"MPH"
 		Behavior on m_value { PropertyAnimation { properties: "m_value"; duration: (propertyMap["010D_DURATION"] ? propertyMap["010D_DURATION"] : 500) } }
 		m_value: (propertyMap["010D"] ? propertyMap["010D"] : 0)
 	  
@@ -76,6 +80,7 @@ Rectangle {
 		numLabels: 7
 		startAngle: 45
 		endAngle: 315
+		text: "VAC"
 		Behavior on m_value { PropertyAnimation { properties: "m_value"; duration: (propertyMap["010F_DURATION"] ? propertyMap["010F_DURATION"] : 500) } }
 		m_value: (propertyMap["010F"] ? propertyMap["010F"] : 0)
 	  

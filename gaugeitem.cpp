@@ -164,6 +164,7 @@ void GaugeItem::drawBackground(QPainter *painter)
 				}
 			}
 		}
+		//tmpPainter.drawText((int)bottomellipsex,(int)bottomellipsey,(int)bottomellipsewidth,(int)bottomellipseheight,m_text);
 		tmpPainter.setPen(QColor(0,0,0));
 		double x=0;
 		double y=0;
@@ -477,12 +478,16 @@ void GaugeItem::drawBackground(QPainter *painter)
 			//qDebug() << _scaleStartAngle << _scaleEndAngle;
 			tmpPainter.drawArc(widthOffset+(internalWidth - i),heightOffset+(internalWidth - i),i-(internalWidth-i),i - (internalWidth-i),(270-_scaleStartAngle) * 16,(0-(_scaleEndAngle - _scaleStartAngle)) * 16);
 		}
-		//double ellipseA = 100;
-		//double ellipseB = 75;
-		//int topellipsex = 1;
-		//int topellipsey = 1;
-		//int topellipsewidth=198;
-		//int topellipseheight=150;
+		tmpPainter.setPen(QPen(QColor::fromRgb(255,255,255)));
+		tmpPainter.setBrush(Qt::SolidPattern);
+		QFont font = tmpPainter.font();
+		font.setPixelSize(30);
+		tmpPainter.setFont(font);
+		tmpPainter.translate(width()/2.0,height()/2.0);
+		tmpPainter.rotate(((_scaleStartAngle + _scaleEndAngle) / 2.0)+180);
+		tmpPainter.drawText(0 - (tmpPainter.fontMetrics().width(m_text)/2.0),0 + (internalHeight/4.0),m_text);
+		tmpPainter.rotate(-1*(((_scaleStartAngle + _scaleEndAngle) / 2.0)+180));
+		tmpPainter.translate(-1*width()/2.0,-1*height()/2.0);
 
 		tmpPainter.setBrush(Qt::SolidPattern);
 		//tmpPainter.drawRect(0,0,width(),height());

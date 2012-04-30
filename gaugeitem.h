@@ -32,13 +32,14 @@ class GaugeItem : public QDeclarativeItem
 {
 	Q_OBJECT
 public:
-	Q_PROPERTY(double m_value READ getValue WRITE setRaw);
-	Q_PROPERTY(double startAngle READ getStartAngle WRITE setStartAngle);
-	Q_PROPERTY(double endAngle READ getEndAngle WRITE setEndAngle);
-	Q_PROPERTY(double minimum READ getMinimum WRITE setMinimum);
-	Q_PROPERTY(double maximum READ getMaximum WRITE setMaximum);
-	Q_PROPERTY(double numLabels READ getNumLabels WRITE setNumLabels);
-	Q_PROPERTY(int m_style READ getStyle WRITE setStyle);
+	Q_PROPERTY(double m_value READ getValue WRITE setRaw)
+	Q_PROPERTY(double startAngle READ getStartAngle WRITE setStartAngle)
+	Q_PROPERTY(double endAngle READ getEndAngle WRITE setEndAngle)
+	Q_PROPERTY(double minimum READ getMinimum WRITE setMinimum)
+	Q_PROPERTY(double maximum READ getMaximum WRITE setMaximum)
+	Q_PROPERTY(double numLabels READ getNumLabels WRITE setNumLabels)
+	Q_PROPERTY(int m_style READ getStyle WRITE setStyle)
+	Q_PROPERTY(QString text READ getText WRITE setText)
 
 	GaugeItem();
 	double getValue() { return m_value; }
@@ -69,7 +70,10 @@ public:
 	void show();
 	//void setFake(bool fake) { m_fake = fake;repaint(); }
 	void setGaugeStyle(int style);
+	QString getText() { return m_text; }
+	void setText(QString text) { m_text = text; update(); }
 private:
+	QString m_text;
 	bool m_redrawBackground;
 	double m_value;
 	void geometryChanged (const QRectF &newgeometry,const QRectF &oldgeometry);

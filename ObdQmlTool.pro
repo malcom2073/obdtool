@@ -5,19 +5,22 @@
 TEMPLATE = app
 TARGET =
 DEPENDPATH += .
-INCLUDEPATH += . c:\libs\libobd\include\ C:\Qt\4.7.4\include\QtDeclarative
+INCLUDEPATH += .
 QT += declarative opengl
 CONFIG += debug
 #CONFIG += debug_and_release
-unix:LIBS += -lobd
-#win32: {
-#DEFINES += WINHACK=1
-#}
+unix:LIBS += -lobd -lqjson
+win32: {
+DEFINES += WINHACK=1
+LIBS += -Lc:/libs/qjson/lib -lqjson0 -Lc:/libs/libobd/lib -lobd
+INCLUDEPATH += c:/libs/qjson/include c:/libs/libobd/include
+
+}
 #build_pass:CONFIG(debug,!release) {
 	#win32:LIBS += c:\libs\libobd\lib\obdd.lib
 #}
 #build_pass:CONFIG(release) {
-win32:LIBS += c:\libs\libobd\lib\obd.lib
+
 #}
 #debug: {
 #
@@ -26,7 +29,7 @@ win32:LIBS += c:\libs\libobd\lib\obd.lib
 #win32:LIBS += c:\libs\libobd\lib\obd.lib
 #}
 # Input
-LIBS += -lqjson
+
 HEADERS += mainwindow.h qmlwindow.h gaugeitem.h \
     settingswidget.h \
     gaugewidget.h \

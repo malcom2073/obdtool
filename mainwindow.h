@@ -91,6 +91,7 @@ private slots:
 	void menu_settingsClicked();
 
 	void uiPidSelectTableClicked(int row, int column);
+	void uiCanStyleChanged(int index);
 	void uiStartMonitorClicked();
 	void uiStopMonitorClicked();
 	void obdMonitorModeLine(QByteArray line);

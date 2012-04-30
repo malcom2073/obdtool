@@ -11,7 +11,16 @@ MainWindow::MainWindow() : QMainWindow()
 	m_canDispStyle = 2;
 	m_demoMode = false;
 
-	if (m_canDispStyle == 1)
+	ui.canStyleComboBox->addItem("Sort by ParamID");
+	ui.canStyleComboBox->addItem("Sort by Source");
+	ui.canStyleComboBox->addItem("Sort by Param, Overwrite and highlight changes");
+	ui.canStyleComboBox->setCurrentIndex(2);
+
+	if (m_canDispStyle == 0)
+	{
+		ui.canMsgTableWidget->setRowCount(1);
+	}
+	else if (m_canDispStyle == 1)
 	{
 		ui.canMsgTableWidget->setRowCount(1);
 	}
@@ -38,6 +47,8 @@ MainWindow::MainWindow() : QMainWindow()
 	connect(ui.pidSelectNonePushButton,SIGNAL(clicked()),this,SLOT(uiPidSelectClearClicked()));
 	connect(ui.pidSelectSavePushButton,SIGNAL(clicked()),this,SLOT(uiPidSelectSaveClicked()));
 	connect(ui.pidSelectAllPushButton,SIGNAL(clicked()),this,SLOT(uiPidSelectAllClicked()));
+
+	connect(ui.canStyleComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(uiCanStyleChanged(int)));
 
 	connect(ui.connectPushButton,SIGNAL(clicked()),this,SLOT(menu_actionConnectClicked()));
 	connect(ui.disconnectPushButton,SIGNAL(clicked()),this,SLOT(menu_actionDisconnectClicked()));
@@ -288,11 +299,11 @@ MainWindow::MainWindow() : QMainWindow()
 
 	if (m_demoMode)
 	{
-	ui.tabWidget->removeTab(2);
-	ui.tabWidget->removeTab(3);
-	ui.tabWidget->removeTab(3);
-	ui.tabWidget->removeTab(3);
-	ui.tabWidget->removeTab(3);
+		ui.tabWidget->removeTab(2);
+		ui.tabWidget->removeTab(3);
+		ui.tabWidget->removeTab(3);
+		ui.tabWidget->removeTab(3);
+		ui.tabWidget->removeTab(3);
 	}
 	m_demoPidList.append("0104");
 	m_demoPidList.append("0105");
@@ -319,6 +330,35 @@ void MainWindow::graphScrollButtonStateChanged(int state)
 		graph->setScrollWithData(true);
 	}
 }
+void MainWindow::uiCanStyleChanged(int index)
+{
+	m_canDispStyle = index;
+	ui.canMsgTableWidget->clear();
+	ui.canMsgTableWidget->setColumnCount(0);
+	if (m_canDispStyle == 0)
+	{
+		ui.canMsgTableWidget->setRowCount(1);
+	}
+	else if (m_canDispStyle == 1)
+	{
+		ui.canMsgTableWidget->setRowCount(1);
+	}
+	else if (m_canDispStyle == 2)
+	{
+		ui.canMsgTableWidget->setRowCount(0);
+		ui.canMsgTableWidget->setColumnCount(8);
+		ui.canMsgTableWidget->setHorizontalHeaderItem(0,new QTableWidgetItem("CANID"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(1,new QTableWidgetItem("SOURCE"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(2,new QTableWidgetItem("BYTE 0"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(3,new QTableWidgetItem("BYTE 1"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(4,new QTableWidgetItem("BYTE 2"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(5,new QTableWidgetItem("BYTE 3"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(6,new QTableWidgetItem("BYTE 4"));
+		ui.canMsgTableWidget->setHorizontalHeaderItem(7,new QTableWidgetItem("BYTE 5"));
+	}
+
+}
+
 void MainWindow::uiStartMonitorClicked()
 {
 	m_canMsgCount = 0;
@@ -402,6 +442,7 @@ void MainWindow::obdMonitorModeLine(QByteArray buf)
 		int paramid = (paramA << 4) + paramB;
 		sourceid = (unsigned char)bytes[3];
 		comp = ((sourceid <= 0x0F) ? "0" : "") + QString::number(sourceid,16).toUpper() + ":" + ((paramid <= 0x0F) ? "0" : "") + QString::number(paramid);
+		//XX:YY XX - sourceid YY - paramid
 		//newmsg += ((sourceid <= 0x0F) ? "0" : "") + QString::number(sourceid,16).toUpper() + ":";
 		for (int i=4;i<bytes.size();i++)
 		{
@@ -458,11 +499,14 @@ void MainWindow::obdMonitorModeLine(QByteArray buf)
 		bool found = false;
 		for (int i=0;i<ui.canMsgTableWidget->rowCount();i++)
 		{
-			if (ui.canMsgTableWidget->item(i,0)->text() == comp)
+			if (ui.canMsgTableWidget->item(i,0))
 			{
-				found = true;
-				foundi = i;
-				break;
+				if (ui.canMsgTableWidget->item(i,0)->text() == comp)
+				{
+					found = true;
+					foundi = i;
+					break;
+				}
 			}
 		}
 		if (!found)
@@ -504,13 +548,29 @@ void MainWindow::obdMonitorModeLine(QByteArray buf)
 			}
 		}
 	}
-	else if (m_canDispStyle == 1)
+	else if (m_canDispStyle == 0 || m_canDispStyle == 1)
 	{
 		bool found = false;
 		int foundi = -1;
+		QString newcomp = "";
+		if (comp.indexOf(":") != -1)
+		{
+			if (m_canDispStyle == 0)
+			{
+				newcomp = comp.split(":")[0];
+			}
+			else if (m_canDispStyle == 1)
+			{
+				newcomp = comp.split(":")[1];
+			}
+		}
+		else
+		{
+			newcomp = comp;
+		}
 		for (int i=0;i<ui.canMsgTableWidget->columnCount();i++)
 		{
-			if (ui.canMsgTableWidget->horizontalHeaderItem(i)->text() == comp)
+			if (ui.canMsgTableWidget->horizontalHeaderItem(i)->text() == newcomp)
 			{
 				found = true;
 				foundi = i;
@@ -522,9 +582,9 @@ void MainWindow::obdMonitorModeLine(QByteArray buf)
 		{
 			ui.canMsgTableWidget->setColumnCount(ui.canMsgTableWidget->columnCount()+1);
 			ui.canMsgTableWidget->setColumnWidth(ui.canMsgTableWidget->columnCount()-1,150);
-			ui.canMsgTableWidget->setHorizontalHeaderItem(ui.canMsgTableWidget->columnCount()-1,new QTableWidgetItem(comp));
+			ui.canMsgTableWidget->setHorizontalHeaderItem(ui.canMsgTableWidget->columnCount()-1,new QTableWidgetItem(newcomp));
 			foundi = ui.canMsgTableWidget->columnCount()-1;
-			qDebug() << "New Column:" << comp;
+			qDebug() << "New Column:" << newcomp;
 		}
 		found = false;
 		if (!ui.canMsgTableWidget->item(ui.canMsgTableWidget->rowCount()-1,foundi))
@@ -613,6 +673,7 @@ void MainWindow::menu_actionDisconnectClicked()
 void MainWindow::obdRawCommLog(QString msg)
 {
 	ui.debugTextBrowser->append(msg.replace("\r","").replace("\n",""));
+	qDebug() << "Raw:" << msg;
 }
 
 void MainWindow::connectButtonClicked()
@@ -631,7 +692,7 @@ void MainWindow::changeEvent(QEvent *evt)
 }
 void MainWindow::pidsPerSecondTimerTick()
 {
-	ui.status_pidUpdateRateLabel->setText("Pid Rate: " + QString::number(m_pidcount));
+	ui.status_pidUpdateRateLabel->setText("Pid Rate: " + QString::number(m_pidcount) +" pids per second");
 	m_pidcount=0;
 }
 void MainWindow::obdOnBoardMonitoringReply(QList<unsigned char> midlist,QList<unsigned char> tidlist,QList<QString> vallist,QList<QString> minlist,QList<QString> maxlist,QList<QString> passlist)
@@ -830,6 +891,11 @@ void MainWindow::obdMonitorStatus(QMap<ObdThread::CONTINUOUS_MONITOR,ObdThread::
 
 MainWindow::~MainWindow()
 {
+	obdThread->stopThread();
+	//obdThread->terminate();
+	//obdThread->exit();
+	obdThread->wait(5000);
+	delete obdThread;
 }
 void MainWindow::menu_settingsClicked()
 {
@@ -858,7 +924,7 @@ void MainWindow::obdSupportedPids(QList<QString> pidlist)
 			ui.pidSelectTableWidget->setItem(ui.pidSelectTableWidget->rowCount()-1,0,new QTableWidgetItem(pidlist[i]));
 			if (!p->bitencoded)
 			{
-			ui.pidSelectTableWidget->item(ui.pidSelectTableWidget->rowCount()-1,0)->setCheckState(Qt::Checked);
+				ui.pidSelectTableWidget->item(ui.pidSelectTableWidget->rowCount()-1,0)->setCheckState(Qt::Checked);
 			}
 
 			if (obdThread->getInfo()->getPidFromString(pidlist[i]))
@@ -906,7 +972,7 @@ void MainWindow::uiPidSelectClearClicked()
 	{
 		if (ui.pidSelectTableWidget->item(i,0)->checkState() == Qt::Checked)
 		{
-		ui.pidSelectTableWidget->item(i,0)->setCheckState(Qt::Unchecked);
+			ui.pidSelectTableWidget->item(i,0)->setCheckState(Qt::Unchecked);
 		}
 	}
 }

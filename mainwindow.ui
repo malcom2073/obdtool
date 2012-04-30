@@ -19,8 +19,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1221</width>
-      <height>731</height>
+      <width>1231</width>
+      <height>721</height>
      </rect>
     </property>
     <property name="tabPosition">
@@ -30,7 +30,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>6</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="summaryTab">
      <attribute name="title">
@@ -394,6 +394,20 @@ The more PIDs you select, the slower they will update.</string>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_18">
             <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="1,9">
+              <item>
+               <widget class="QLabel" name="label_10">
+                <property name="text">
+                 <string>Style</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="canStyleComboBox"/>
+              </item>
+             </layout>
+            </item>
+            <item>
              <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="0,2">
               <item>
                <widget class="QLabel" name="label_11">
@@ -404,27 +418,6 @@ The more PIDs you select, the slower they will update.</string>
               </item>
               <item>
                <widget class="QComboBox" name="canProtocolComboBox"/>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_9">
-              <item>
-               <widget class="QLabel" name="label_8">
-                <property name="text">
-                 <string>Save Log</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="canSaveLogFileLineEdit"/>
-              </item>
-              <item>
-               <widget class="QPushButton" name="canSaveLogFileBrowseButton">
-                <property name="text">
-                 <string>Browse</string>
-                </property>
-               </widget>
               </item>
              </layout>
             </item>
@@ -455,6 +448,27 @@ The more PIDs you select, the slower they will update.</string>
                <widget class="QPushButton" name="canLoadLogPushButton">
                 <property name="text">
                  <string>Load</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <item>
+               <widget class="QLabel" name="label_8">
+                <property name="text">
+                 <string>Save Log</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="canSaveLogFileLineEdit"/>
+              </item>
+              <item>
+               <widget class="QPushButton" name="canSaveLogFileBrowseButton">
+                <property name="text">
+                 <string>Browse</string>
                 </property>
                </widget>
               </item>
@@ -495,6 +509,94 @@ The more PIDs you select, the slower they will update.</string>
      <attribute name="title">
       <string>Datalogging</string>
      </attribute>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>30</y>
+        <width>211</width>
+        <height>151</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Format</string>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>30</y>
+         <width>201</width>
+         <height>101</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_17">
+        <item>
+         <widget class="QRadioButton" name="radioButton_2">
+          <property name="text">
+           <string>JSON</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton">
+          <property name="text">
+           <string>obdgpslogger sqlite</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_3">
+          <property name="text">
+           <string>csv</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>30</y>
+        <width>321</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Location</string>
+      </property>
+      <widget class="QWidget" name="horizontalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>30</y>
+         <width>311</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_10">
+        <item>
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Folder</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="datalogLocationLineEdit"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="datalogBrowsePushButton">
+          <property name="text">
+           <string>Browse</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </widget>
     <widget class="QWidget" name="troubleCodesTab">
      <attribute name="title">
@@ -645,8 +747,8 @@ The more PIDs you select, the slower they will update.</string>
    <widget class="QLabel" name="status_comPortLabel">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>780</y>
+      <x>10</x>
+      <y>750</y>
       <width>150</width>
       <height>13</height>
      </rect>
@@ -664,8 +766,8 @@ The more PIDs you select, the slower they will update.</string>
    <widget class="QLabel" name="status_comBaudLabel">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>780</y>
+      <x>150</x>
+      <y>750</y>
       <width>75</width>
       <height>16</height>
      </rect>
@@ -683,8 +785,8 @@ The more PIDs you select, the slower they will update.</string>
    <widget class="QLabel" name="status_comStatusLabel">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>760</y>
+      <x>240</x>
+      <y>750</y>
       <width>200</width>
       <height>16</height>
      </rect>
@@ -702,8 +804,8 @@ The more PIDs you select, the slower they will update.</string>
    <widget class="QLabel" name="status_comInterfaceLabel">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>770</y>
+      <x>430</x>
+      <y>750</y>
       <width>200</width>
       <height>13</height>
      </rect>
@@ -721,8 +823,8 @@ The more PIDs you select, the slower they will update.</string>
    <widget class="QLabel" name="status_comProtocolLabel">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>770</y>
+      <x>640</x>
+      <y>750</y>
       <width>175</width>
       <height>13</height>
      </rect>
@@ -740,8 +842,8 @@ The more PIDs you select, the slower they will update.</string>
    <widget class="QLabel" name="status_pidUpdateRateLabel">
     <property name="geometry">
      <rect>
-      <x>710</x>
-      <y>780</y>
+      <x>810</x>
+      <y>750</y>
       <width>175</width>
       <height>13</height>
      </rect>
