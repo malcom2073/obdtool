@@ -1,6 +1,6 @@
 /**************************************************************************
 *   Copyright (C) 2010 by Michael Carpenter (malcom2073)                  *
-*   mcarpenter@interforcesystems.com                                      *
+*   malcom2073@gmail.com                                                  *
 *                                                                         *
 *   This file is a part of OBDToolbox                                     *
 *                                                                         *
@@ -17,6 +17,7 @@
 *   You should have received a copy of the GNU General Public License     *
 *   along with OBDToolbox.  If not, see <http://www.gnu.org/licenses/>.   *
 ***************************************************************************/
+
 #include "egraph.h"
 #include <QPainter>
 #include <QDebug>
@@ -59,16 +60,58 @@ void EGraph::paintEvent(QPaintEvent *e)
 					QPainterPath p;
 					//p.moveTo(width()*0.03,(height() * 0.9));
 					p.moveTo((width()*0.03),(height()*.95) - (((m_values[j][start] - m_min[j]) / (m_max[j] - m_min[j])) * (height() * .9)));
-					for (int i=(int)start;i<=(int)stop;i+=2)
+					bool nextflat = false;
+					for (int i=(int)start+1;i<=(int)stop-1;i++)
 					{
-						if (m_values[j].size() > i+1)
+						if (m_values[j].size() > i+2)
 						{
 							///TODO: Curve paths using quadTo or cubicTwo to smooth the graph
-							p.lineTo(((i - (int)start) * ((float)(width()*(.94-(labelSize * m_values.size()))) / (float)(stop-start)))+(width()*.03),(height()*.95) - (((m_values[j][i] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9)));
+							//p.lineTo(((i - (int)start) * ((float)(width()*(.94-(labelSize * m_values.size()))) / (float)(stop-start)))+(width()*.03),(height()*.95) - (((m_values[j][i] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9)));
+
 							//float mx = ((i - (int)start) * ((float)(width()*(.94-(labelSize * m_values.size()))) / (float)(stop-start)))+(width()*.03);
 							//float my = (height()*.95) - (((m_values[j][i] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9));
-							//float sx = ((i+1 - (int)start) * ((float)(width()*(.94-(labelSize * m_values.size()))) / (float)(stop-start)))+(width()*.03);
-							//float sy = (height()*.95) - (((m_values[j][i+1] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9));
+							float currentx = ((i - (int)start) * ((float)(width()*(.94-(labelSize * m_values.size()))) / (float)(stop-start)))+(width()*.03);
+							float currenty = (height()*.95) - (((m_values[j][i] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9));
+
+							float prevx = (((i-1) - (int)start) * ((float)(width()*(.94-(labelSize * m_values.size()))) / (float)(stop-start)))+(width()*.03);
+							float prevy = (height()*.95) - (((m_values[j][i-1] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9));
+
+							float nextx = (((i+1) - (int)start) * ((float)(width()*(.94-(labelSize * m_values.size()))) / (float)(stop-start)))+(width()*.03);
+							float nexty = (height()*.95) - (((m_values[j][i+1] - m_min[j]) / (m_max[j] - m_min[j])) * (height()*.9));
+							float mult = 3;
+							float xdiff = currentx - prevx;
+							float ydiff = currenty - prevy;
+							float ratio = ydiff / xdiff;
+							float middlex = prevx + ((currentx-prevx) / mult);
+							float middley = prevy + (ratio * ((currentx-prevx)/mult));
+
+							float nextxdiff = nextx-currentx;
+							float nextydiff = nexty-currenty;
+							float nextratio = nextydiff/nextxdiff;
+							float nextmiddlex = currentx-((nextx-currentx) / mult);
+							float nextmiddley = currenty-(nextratio*((nextx-currentx)/mult));
+							//p.cubicTo(middlex,middley,nextx,nexty,currentx,currenty);
+							painter.setPen(QPen(QColor::fromRgb(255,0,0)));
+							painter.drawLine(middlex,middley,prevx,prevy);
+							painter.setPen(QPen(QColor::fromRgb(0,0,255)));
+							painter.drawLine(currentx,currenty,nextmiddlex,nextmiddley);
+							painter.setPen(QPen(QColor::fromRgb(0,0,0)));
+							if ((nextmiddley < currenty && middley < prevy) || (middley > prevy && nextmiddley > currenty))
+							{
+								p.cubicTo(middlex,currenty,nextmiddlex,currenty,currentx,currenty);
+								nextflat = true;
+							}
+							else if (!nextflat)
+							{
+								p.cubicTo(middlex,middley,nextmiddlex,nextmiddley,currentx,currenty);
+							}
+							else
+							{
+								nextflat = false;
+								p.cubicTo(middlex,currenty,nextmiddlex,currenty,currentx,currenty);
+							}
+
+							//}
 							//p.lineTo(sx,sy);
 							//p.quadTo(mx,my,sx,sy);
 						}

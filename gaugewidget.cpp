@@ -1,6 +1,6 @@
 /**************************************************************************
 *   Copyright (C) 2010 by Michael Carpenter (malcom2073)                  *
-*   mcarpenter@interforcesystems.com                                      *
+*   malcom2073@gmail.com                                                  *
 *                                                                         *
 *   This file is a part of OBDToolbox                                     *
 *                                                                         *
@@ -17,6 +17,7 @@
 *   You should have received a copy of the GNU General Public License     *
 *   along with OBDToolbox.  If not, see <http://www.gnu.org/licenses/>.   *
 ***************************************************************************/
+
 #include "gaugewidget.h"
 #define M_PI 3.1415926535897932384626433832795
 #include <math.h>

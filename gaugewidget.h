@@ -1,6 +1,6 @@
 /**************************************************************************
 *   Copyright (C) 2010 by Michael Carpenter (malcom2073)                  *
-*   mcarpenter@interforcesystems.com                                      *
+*   malcom2073@gmail.com                                                  *
 *                                                                         *
 *   This file is a part of OBDToolbox                                     *
 *                                                                         *

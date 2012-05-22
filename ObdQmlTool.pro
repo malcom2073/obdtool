@@ -5,11 +5,11 @@
 TEMPLATE = app
 TARGET =
 DEPENDPATH += .
-INCLUDEPATH += .
+INCLUDEPATH += . /usr/include/qwt-qt4
 QT += declarative opengl
 CONFIG += debug
 #CONFIG += debug_and_release
-unix:LIBS += -lobd -lqjson
+unix:LIBS += -lobd -lqjson -lqwt-qt4
 win32: {
 DEFINES += WINHACK=1
 LIBS += -Lc:/libs/qjson/lib -lqjson0 -Lc:/libs/libobd/lib -lobd

@@ -1,3 +1,23 @@
+/**************************************************************************
+*   Copyright (C) 2010 by Michael Carpenter (malcom2073)                  *
+*   malcom2073@gmail.com                                                  *
+*                                                                         *
+*   This file is a part of OBDToolbox                                     *
+*                                                                         *
+*   OBDToolbox is free software: you can redistribute it and/or modify    *
+*   it under the terms of the GNU General Public License as published by  *
+*   the Free Software Foundation, either version 3 of the License, or     *
+*   (at your option) any later version.                                   *
+*                                                                         *
+*   OBDToolbox is distributed in the hope that it will be useful,         *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+*   GNU General Public License for more details.                          *
+*                                                                         *
+*   You should have received a copy of the GNU General Public License     *
+*   along with OBDToolbox.  If not, see <http://www.gnu.org/licenses/>.   *
+***************************************************************************/
+
 #include "mainwindow.h"
 #include <QSettings>
 #include <QDeclarativeItem>
@@ -83,6 +103,27 @@ MainWindow::MainWindow() : QMainWindow()
 	QObject::connect(obdThread,SIGNAL(rawCommsMessage(QString)),this,SLOT(obdRawCommLog(QString)));
 	QObject::connect(obdThread,SIGNAL(monitorModeLine(QByteArray)),this,SLOT(obdMonitorModeLine(QByteArray)));
 
+	/*QWidget *plotWidget = new QWidget();
+	QwtPlot *myPlot = new QwtPlot(QwtText("Two Curves"), plotWidget);
+
+	// add curves
+	QwtPlotCurve *curve1 = new QwtPlotCurve("Curve 1");
+	QwtPlotCurve *curve2 = new QwtPlotCurve("Curve 2");
+
+	// copy the data into the curves
+	//curve1->setData(...);
+	//curve2->setData(...);
+
+
+	curve1->attach(myPlot);
+	curve2->attach(myPlot);
+
+	// finally, refresh the plot
+	myPlot->replot();*/
+
+
+	//ui.qwtPlot->set;
+	ui.qwtPlot->hide();
 	obdThread->start();
 //monitorTestReply(QMap<CONTINUOUS_MONITOR,MONITOR_COMPLETE_STATUS> monitorlist)
 
@@ -195,6 +236,7 @@ MainWindow::MainWindow() : QMainWindow()
 	gaugeView->setSource(QUrl("gaugeview.qml"));
 	gaugeView->show();
 
+
 	//gaugeView->engine()->setProperty("propertyMap",propertyMap);
 
 
@@ -229,6 +271,20 @@ MainWindow::MainWindow() : QMainWindow()
 	m_graphPidMap["010D"] = 1;
 	m_graphPidMap["010C"] = 0;
 	graph->show();
+
+
+	graph->addValue(0,100);
+	graph->addValue(0,500);
+	graph->addValue(0,1000);
+	graph->addValue(0,500);
+	graph->addValue(0,3000);
+	graph->addValue(0,4000);
+	graph->addValue(0,5000);
+	graph->addValue(0,7000);
+	graph->addValue(0,1000);
+	graph->addValue(0,1000);
+	graph->addValue(0,1000);
+	//graph->hide();
 
 
 
@@ -372,9 +428,14 @@ void MainWindow::uiStartMonitorClicked()
 	{
 		m_canLogFile = 0;
 	}
+	obdThread->sendSingleShotRequest("ATD0\r");
 	obdThread->setEcho(false);
-	obdThread->setLineFeed(false);
+	obdThread->setLineFeed(true);
+	obdThread->setHeader(true);
 	obdThread->MX_setProtocol(ui.canProtocolComboBox->currentText().split(":")[0].toInt());
+	obdThread->ST_clearBlockFilters();
+	obdThread->ST_clearFlowFilters();
+	obdThread->ST_addPassFilter(QString("FFFFFFFF,00000000"));
 	obdThread->startMonitorMode();
 }
 
@@ -398,6 +459,7 @@ void MainWindow::obdMonitorModeLine(QByteArray buf)
 {
 	m_canMsgCount++;
 	ui.canMsgLabel->setText("Messages: " + QString::number(m_canMsgCount));
+	//ui.rawConsoleTextBrowser->append(buf.replace("\r","").replace("\n","") + "\n");
 	QJson::Serializer ser;
 	if (m_canLogFile)
 	{
@@ -678,7 +740,7 @@ void MainWindow::obdRawCommLog(QString msg)
 
 void MainWindow::connectButtonClicked()
 {
-	obdThread->connect();
+	obdThread->connect(true);
 }
 
 void MainWindow::changeEvent(QEvent *evt)
@@ -793,7 +855,7 @@ void MainWindow::resizeEvent(QResizeEvent *evt)
 
 void MainWindow::obdSingleShotReply(QByteArray req,QByteArray reply)
 {
-	qDebug() << "Raw Reply" << req << reply;
+	//qDebug() << "Raw Reply" << req << reply;
 	if (req.startsWith("AT@1"))
 	{
 
@@ -989,10 +1051,30 @@ void MainWindow::uiPidSelectAllClicked()
 void MainWindow::uiPidSelectSaveClicked()
 {
 	clearReadPidsTable();
+	ui.qwtPlot->clear();
+	QMap<QString,QwtPlotCurve*>::const_iterator j = m_plotCurveMap.constBegin();
+	while (j != m_plotCurveMap.constEnd())
+	{
+		delete j.value();
+		j++;
+	}
+	m_plotCurveMap.clear();
+	m_plotDataMapX.clear();
+	m_plotDataMapY.clear();
 	for (int i=0;i<ui.pidSelectTableWidget->rowCount();i++)
 	{
 		if (ui.pidSelectTableWidget->item(i,0)->checkState() == Qt::Checked)
 		{
+			/*QString pid = ui.pidSelectTableWidget->item(i,0)->text();
+			m_plotCurveMap[pid] = new QwtPlotCurve(ui.pidSelectTableWidget->item(i,1)->text());
+			m_plotDataMapX[pid] = QVector<double>();
+			m_plotDataMapY[pid] = QVector<double>();
+			m_plotCurveMap[pid]->setData(m_plotDataMapX[pid],m_plotDataMapY[pid]);
+			m_plotCurveMap[pid]->setStyle(QwtPlotCurve::Lines);
+			m_plotCurveMap[pid]->setCurveFitter(new QwtSplineCurveFitter());
+			m_plotCurveMap[pid]->setCurveAttribute(QwtPlotCurve::Fitted,true);
+			m_plotCurveMap[pid]->attach(ui.qwtPlot);
+			qDebug() << "Added plot:" << pid;*/
 			addReadPidRow(ui.pidSelectTableWidget->item(i,0)->text(),ui.pidSelectTableWidget->item(i,2)->text().toInt());
 		}
 	}
@@ -1021,7 +1103,12 @@ void MainWindow::obdPidReceived(QString pid,QString val,int set, double time)
 	{
 		graph->addValue(m_graphPidMap[pid],val.toDouble());
 	}
-	m_pidcount++;
+	/*m_pidcount++;
+	m_plotDataMapY[pid].append(val.toDouble());
+	m_plotDataMapX[pid].append(m_plotDataMapX[pid].size());
+	m_plotCurveMap[pid]->setData(m_plotDataMapX[pid],m_plotDataMapY[pid]);
+	//curve->attach(ui.qwtPlot);
+	ui.qwtPlot->replot();*/
 }
 void MainWindow::obdConnected(QString version)
 {
@@ -1043,7 +1130,7 @@ void MainWindow::obdConnected(QString version)
 void MainWindow::menu_actionConnectClicked()
 {
 	m_permConnect = true;
-	obdThread->connect();
+	obdThread->connect(true);
 	ui.status_comStatusLabel->setText("Status: Connecting");
 }
 void MainWindow::obdDisconnected()
@@ -1071,14 +1158,14 @@ void MainWindow::obdTroubleCodes(QString ecu,QList<QString> codes)
 			ui.troubleStoredTableWidget->setItem(counter+i,1,new QTableWidgetItem(codes[i]));
 		}
 	}
-	else
+	/*else
 	{
 		ui.troubleStoredTableWidget->setRowCount(1);
 		ui.troubleStoredTableWidget->setItem(0,0,new QTableWidgetItem());
 		ui.troubleStoredTableWidget->setItem(0,1,new QTableWidgetItem("No Codes"));
 		ui.connectionInfoTableWidget->item(9,1)->setText("Clear");
 		ui.connectionInfoTableWidget->item(10,1)->setText(0);
-	}
+	}*/
 }
 void MainWindow::obdError(ObdThread::ObdError err)
 {

@@ -1,3 +1,23 @@
+/**************************************************************************
+*   Copyright (C) 2010 by Michael Carpenter (malcom2073)                  *
+*   malcom2073@gmail.com                                                  *
+*                                                                         *
+*   This file is a part of OBDToolbox                                     *
+*                                                                         *
+*   OBDToolbox is free software: you can redistribute it and/or modify    *
+*   it under the terms of the GNU General Public License as published by  *
+*   the Free Software Foundation, either version 3 of the License, or     *
+*   (at your option) any later version.                                   *
+*                                                                         *
+*   OBDToolbox is distributed in the hope that it will be useful,         *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+*   GNU General Public License for more details.                          *
+*                                                                         *
+*   You should have received a copy of the GNU General Public License     *
+*   along with OBDToolbox.  If not, see <http://www.gnu.org/licenses/>.   *
+***************************************************************************/
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -14,6 +34,11 @@
 #include "gaugewidget.h"
 #include "egraph.h"
 #include "settingswidget.h"
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_text.h>
+#include <qwt_spline.h>
+#include <qwt_curve_fitter.h>
 
 class MainWindow : public QMainWindow
 {
@@ -31,8 +56,15 @@ public:
 	Q_INVOKABLE void saveComPort(QString port,int baud);
 	*/
 private:
+	QList<QwtPlotCurve*> m_plotCurves;
+	QList<QVector<double> > m_plotDataListX;
+	QwtPlotCurve *curve;
+	QList<QVector<double> > m_plotDataListY;
 	EGraph *graph;
 	QMap<QString,int> m_graphPidMap;
+	QMap<QString,QwtPlotCurve*> m_plotCurveMap;
+	QMap<QString,QVector<double> > m_plotDataMapX;
+	QMap<QString,QVector<double> > m_plotDataMapY;
 	SettingsWidget *settingsWidget;
 	ObdThread *obdThread;
 	QMap<QString,double> m_pidTimeMap;
