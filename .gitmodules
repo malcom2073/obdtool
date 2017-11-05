@@ -1,0 +1,3 @@
+[submodule "libobd"]
+	path = libobd
+	url = https://github.com/malcom2073/libobd.git

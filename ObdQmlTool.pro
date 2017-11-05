@@ -3,17 +3,17 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET =
+TARGET = obdtool
 DEPENDPATH += .
 INCLUDEPATH += . /usr/include/qwt-qt4
-QT += declarative opengl
+QT += qml quick opengl
 CONFIG += debug
 #CONFIG += debug_and_release
 unix:LIBS += -lobd -lqjson -lqwt-qt4
 win32: {
 DEFINES += WINHACK=1
-LIBS += -Lc:/libs/qjson/lib -lqjson0 -Lc:/libs/libobd/lib -lobd
-INCLUDEPATH += c:/libs/qjson/include c:/libs/libobd/include
+
+include(libobd/libobd.pri)
 
 }
 #build_pass:CONFIG(debug,!release) {
@@ -30,13 +30,12 @@ INCLUDEPATH += c:/libs/qjson/include c:/libs/libobd/include
 #}
 # Input
 
-HEADERS += mainwindow.h qmlwindow.h gaugeitem.h \
+HEADERS += mainwindow.h \
     settingswidget.h \
-    gaugewidget.h \
     egraph.h
-SOURCES += main.cpp mainwindow.cpp qmlwindow.cpp gaugeitem.cpp \
+
+SOURCES += main.cpp mainwindow.cpp \
     settingswidget.cpp \
-    gaugewidget.cpp \
     egraph.cpp
 
 OTHER_FILES += \

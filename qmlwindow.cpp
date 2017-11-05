@@ -139,10 +139,10 @@ void QmlWindow::obdPidReceived(QString pid,QString val,int set, double time)
 	{
 		double newtime = QDateTime::currentMSecsSinceEpoch() - m_pidTimeMap[pid];
 		//qDebug() << pid << val << set << QString::number(QDateTime::currentMSecsSinceEpoch(),'f') << newtime << QDateTime::currentMSecsSinceEpoch();
-		propertyMap.setProperty(QString(pid + "_DURATION").toAscii(),newtime);
+		propertyMap.setProperty(QString(pid + "_DURATION").toLatin1(),newtime);
         }
         m_pidTimeMap[pid] = QDateTime::currentMSecsSinceEpoch();
-	propertyMap.setProperty(pid.toAscii(),val);
+	propertyMap.setProperty(pid.toLatin1(),val);
 }
 void QmlWindow::obdConnected(QString protocol)
 {

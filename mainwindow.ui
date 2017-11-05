@@ -30,7 +30,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="summaryTab">
      <attribute name="title">
@@ -247,16 +247,6 @@ The more PIDs you select, the slower they will update.</string>
       </property>
       <property name="text">
        <string>Scroll with data</string>
-      </property>
-     </widget>
-     <widget class="QwtPlot" name="qwtPlot">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>781</width>
-        <height>431</height>
-       </rect>
       </property>
      </widget>
     </widget>
@@ -875,7 +865,7 @@ The more PIDs you select, the slower they will update.</string>
      <x>0</x>
      <y>0</y>
      <width>1234</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -916,13 +906,6 @@ The more PIDs you select, the slower they will update.</string>
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QwtPlot</class>
-   <extends>QFrame</extends>
-   <header>qwt_plot.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

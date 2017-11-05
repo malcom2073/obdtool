@@ -27,18 +27,18 @@
 #include <QMap>
 #include <QMainWindow>
 #include <ObdThread.h>
-#include <QDeclarativeView>
-#include <QDeclarativePropertyMap>
+//#include <QDeclarativeView>
+//#include <QDeclarativePropertyMap>
 #include <QTimer>
 #include <QFile>
-#include "gaugewidget.h"
+//#include "gaugewidget.h"
 #include "egraph.h"
 #include "settingswidget.h"
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
-#include <qwt_text.h>
-#include <qwt_spline.h>
-#include <qwt_curve_fitter.h>
+//#include <qwt_plot.h>
+//#include <qwt_plot_curve.h>
+//#include <qwt_text.h>
+//#include <qwt_spline.h>
+//#include <qwt_curve_fitter.h>
 
 class MainWindow : public QMainWindow
 {
@@ -56,13 +56,13 @@ public:
 	Q_INVOKABLE void saveComPort(QString port,int baud);
 	*/
 private:
-	QList<QwtPlotCurve*> m_plotCurves;
-	QList<QVector<double> > m_plotDataListX;
-	QwtPlotCurve *curve;
-	QList<QVector<double> > m_plotDataListY;
+//	QList<QwtPlotCurve*> m_plotCurves;
+//	QList<QVector<double> > m_plotDataListX;
+//	QwtPlotCurve *curve;
+//	QList<QVector<double> > m_plotDataListY;
 	EGraph *graph;
 	QMap<QString,int> m_graphPidMap;
-	QMap<QString,QwtPlotCurve*> m_plotCurveMap;
+//	QMap<QString,QwtPlotCurve*> m_plotCurveMap;
 	QMap<QString,QVector<double> > m_plotDataMapX;
 	QMap<QString,QVector<double> > m_plotDataMapY;
 	SettingsWidget *settingsWidget;
@@ -77,9 +77,9 @@ private:
 	Ui::MainWindow ui;
 	QMap<QString,QTableWidgetItem*> m_readPidTableMap;
 	void addReadPidRow(QString pid,int priority);
-	QList<GaugeWidget*> m_gaugeWidgetList;
-	QDeclarativePropertyMap propertyMap;
-	QDeclarativeView *gaugeView;
+//	QList<GaugeWidget*> m_gaugeWidgetList;
+	//QDeclarativePropertyMap propertyMap;
+	//QDeclarativeView *gaugeView;
 	QTimer *pidsPerSecondTimer;
 	int m_pidcount;
 	QString m_port;

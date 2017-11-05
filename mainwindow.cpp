@@ -20,11 +20,11 @@
 
 #include "mainwindow.h"
 #include <QSettings>
-#include <QDeclarativeItem>
-#include "gaugeitem.h"
-#include <QDeclarativeContext>
+//#include <QDeclarativeItem>
+//#include "gaugeitem.h"
+//#include <QDeclarativeContext>
 #include <QFileDialog>
-#include <qjson/serializer.h>
+//#include <qjson/serializer.h>
 MainWindow::MainWindow() : QMainWindow()
 {
 	ui.setupUi(this);
@@ -123,7 +123,7 @@ MainWindow::MainWindow() : QMainWindow()
 
 
 	//ui.qwtPlot->set;
-	ui.qwtPlot->hide();
+//	ui.qwtPlot->hide();
 	obdThread->start();
 //monitorTestReply(QMap<CONTINUOUS_MONITOR,MONITOR_COMPLETE_STATUS> monitorlist)
 
@@ -229,13 +229,13 @@ MainWindow::MainWindow() : QMainWindow()
 
 
 	//QML Based gaugeview. Load qml from resource, or from a file.
-	gaugeView = new QDeclarativeView(ui.gaugesTab);
+/*	gaugeView = new QDeclarativeView(ui.gaugesTab);
 	qmlRegisterType<GaugeItem>("GaugeImage",0,1,"GaugeImage");
 	gaugeView->rootContext()->setContextProperty("propertyMap",&propertyMap);
 	gaugeView->setGeometry(0,0,this->width()-5,this->height()-(ui.statusbar->height()+30));
 	gaugeView->setSource(QUrl("gaugeview.qml"));
 	gaugeView->show();
-
+*/
 
 	//gaugeView->engine()->setProperty("propertyMap",propertyMap);
 
@@ -460,15 +460,15 @@ void MainWindow::obdMonitorModeLine(QByteArray buf)
 	m_canMsgCount++;
 	ui.canMsgLabel->setText("Messages: " + QString::number(m_canMsgCount));
 	//ui.rawConsoleTextBrowser->append(buf.replace("\r","").replace("\n","") + "\n");
-	QJson::Serializer ser;
+	//QJson::Serializer ser;
 	if (m_canLogFile)
 	{
 		QVariantMap map;
 		map["data"] = buf;
 		map["direction"] = "in";
 		map["mode"] = "11";
-		map["time"] = QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch() / 1000.0,'f');
-		m_canLogFile->write(ser.serialize(map).append("\n"));
+	//	map["time"] = QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch() / 1000.0,'f');
+	//	m_canLogFile->write(ser.serialize(map).append("\n"));
 	}
 	/*if (!m_display)
 	{
@@ -1051,7 +1051,7 @@ void MainWindow::uiPidSelectAllClicked()
 void MainWindow::uiPidSelectSaveClicked()
 {
 	clearReadPidsTable();
-	ui.qwtPlot->clear();
+/*	ui.qwtPlot->clear();
 	QMap<QString,QwtPlotCurve*>::const_iterator j = m_plotCurveMap.constBegin();
 	while (j != m_plotCurveMap.constEnd())
 	{
@@ -1065,6 +1065,7 @@ void MainWindow::uiPidSelectSaveClicked()
 	{
 		if (ui.pidSelectTableWidget->item(i,0)->checkState() == Qt::Checked)
 		{
+		*/
 			/*QString pid = ui.pidSelectTableWidget->item(i,0)->text();
 			m_plotCurveMap[pid] = new QwtPlotCurve(ui.pidSelectTableWidget->item(i,1)->text());
 			m_plotDataMapX[pid] = QVector<double>();
@@ -1075,9 +1076,11 @@ void MainWindow::uiPidSelectSaveClicked()
 			m_plotCurveMap[pid]->setCurveAttribute(QwtPlotCurve::Fitted,true);
 			m_plotCurveMap[pid]->attach(ui.qwtPlot);
 			qDebug() << "Added plot:" << pid;*/
+	/*
 			addReadPidRow(ui.pidSelectTableWidget->item(i,0)->text(),ui.pidSelectTableWidget->item(i,2)->text().toInt());
 		}
 	}
+	*/
 }
 
 void MainWindow::obdPidReceived(QString pid,QString val,int set, double time)
@@ -1085,15 +1088,15 @@ void MainWindow::obdPidReceived(QString pid,QString val,int set, double time)
 	Q_UNUSED(set);
 	Q_UNUSED(time);
 	//qDebug() << pid << val;
-	propertyMap.setProperty(pid.toAscii(),val);
+//	propertyMap.setProperty(pid.toLatin1(),val);
 	//0105_DURATION
 	if (m_pidTimeMap.contains(pid))
 	{
-		double newtime = QDateTime::currentMSecsSinceEpoch() - m_pidTimeMap[pid];
+//		double newtime = QDateTime::currentMSecsSinceEpoch() - m_pidTimeMap[pid];
 		//qDebug() << pid << val << set << QString::number(QDateTime::currentMSecsSinceEpoch(),'f') << newtime << QDateTime::currentMSecsSinceEpoch();
-		propertyMap.setProperty(QString(pid + "_DURATION").toAscii(),newtime);
+//		propertyMap.setProperty(QString(pid + "_DURATION").toLatin1(),newtime);
 	}
-	m_pidTimeMap[pid] = QDateTime::currentMSecsSinceEpoch();
+//	m_pidTimeMap[pid] = QDateTime::currentMSecsSinceEpoch();
 
 	if (m_readPidTableMap.contains(pid))
 	{
